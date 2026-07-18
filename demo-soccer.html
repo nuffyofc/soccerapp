@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#07080a">
-<title>Who's Better? — Soccer (World Cup) MVP Demo</title>
+<title>PickYourGOAT — Soccer (World Cup) MVP Demo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Anton&display=swap" rel="stylesheet">
@@ -206,19 +206,20 @@
   .splash-btn:active{transform:skewX(-6deg) scale(0.97);}
   .splash-btn .ic{transform:skewX(6deg);display:inline-block;font-size:19px;}
   .splash-btn-primary{
-    background:linear-gradient(90deg,var(--gold),var(--amber));
-    color:#151107;
-    box-shadow:0 10px 28px rgba(255,201,77,0.35);
+    background:rgba(255,201,77,0.15);
+    color:var(--gold);
+    border:1px solid rgba(255,201,77,0.35);
+    box-shadow:0 0 20px rgba(255,201,77,0.1);
   }
   .splash-btn-secondary{
-    background:rgba(255,255,255,0.05);
-    color:var(--text);
-    border:1px solid rgba(255,255,255,0.18);
-  }
-  .splash-btn-follow{
-    background:transparent;
+    background:rgba(255,255,255,0.03);
     color:var(--text-dim);
     border:1px solid rgba(255,255,255,0.1);
+  }
+  .splash-btn-follow{
+    background:rgba(255,255,255,0.02);
+    color:var(--text-dim);
+    border:1px solid rgba(255,255,255,0.06);
     font-size:14px;
     padding:14px;
   }
@@ -381,6 +382,17 @@
   }
 
   .flag{font-size:28px;margin-bottom:6px;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.4));}
+  .flag-england{
+    width:34px;height:22px;margin-bottom:6px;
+    background:#fff;position:relative;
+    filter:drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+    border:1px solid rgba(255,255,255,0.15);
+  }
+  .flag-england::before,.flag-england::after{
+    content:"";position:absolute;background:#CE1124;
+  }
+  .flag-england::before{top:0;bottom:0;left:50%;width:4px;transform:translateX(-50%);}
+  .flag-england::after{left:0;right:0;top:50%;height:4px;transform:translateY(-50%);}
   .initials{
     font-size:44px;font-weight:900;letter-spacing:-1px;
     text-shadow:0 4px 18px rgba(0,0,0,0.5);
@@ -537,7 +549,7 @@
     text-align:center;
     padding:26px;
   }
-  .share-eyebrow{font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);font-weight:800;text-shadow:0 2px 8px rgba(0,0,0,0.6);}
+  .share-eyebrow{font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);font-weight:800;text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000,0 2px 8px rgba(0,0,0,0.8);}
   .share-stat{
     font-family:'Anton',sans-serif;
     font-size:60px;font-weight:400;line-height:1;margin:14px 0 6px;
@@ -547,7 +559,7 @@
     transform:skewX(-6deg);
     background:linear-gradient(90deg,var(--gold),var(--amber));
     -webkit-background-clip:text;background-clip:text;color:transparent;
-    filter:drop-shadow(0 4px 14px rgba(0,0,0,0.5));
+    filter:drop-shadow(-1px -1px 0 #000) drop-shadow(1px -1px 0 #000) drop-shadow(-1px 1px 0 #000) drop-shadow(1px 1px 0 #000) drop-shadow(0 4px 14px rgba(0,0,0,0.6));
   }
   /* html2canvas can't rasterize background-clip:text gradients — swap to a
      solid fill while exporting so the stat number doesn't vanish in the PNG */
@@ -559,17 +571,35 @@
   }
   .share-line{font-size:15px;font-weight:700;max-width:230px;line-height:1.4;text-shadow:0 2px 8px rgba(0,0,0,0.6);}
   .share-line b{color:var(--accent2);}
-  .share-brand{margin-top:24px;font-size:12px;color:var(--text-dim);font-weight:800;letter-spacing:.5px;text-shadow:0 2px 8px rgba(0,0,0,0.6);}
-  .share-brand span{color:var(--accent);}
   .share-hashtag{
     margin-top:6px;font-size:13px;font-weight:800;letter-spacing:1.5px;
-    color:var(--accent2);text-transform:uppercase;
-    text-shadow:0 2px 8px rgba(0,0,0,0.6);
+    color:var(--gold);text-transform:uppercase;
+    text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000,0 2px 8px rgba(0,0,0,0.8);
   }
-  .share-watermark{
-    margin-top:4px;font-size:10px;font-weight:600;letter-spacing:.5px;
-    color:rgba(255,255,255,0.45);
-    text-shadow:0 1px 4px rgba(0,0,0,0.4);
+  .share-instagram-btn{
+    margin-top:10px;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 18px;
+    border-radius:8px;
+    background:linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    color:#fff;
+    font-size:14px;
+    font-weight:700;
+    text-decoration:none;
+    letter-spacing:.5px;
+    box-shadow:0 4px 15px rgba(225,48,108,0.4);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .share-instagram-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 6px 20px rgba(225,48,108,0.5);
+  }
+  .ig-icon{
+    width:20px;
+    height:20px;
+    flex-shrink:0;
   }
 
   .share-actions{display:flex;gap:10px;margin-top:22px;width:100%;max-width:320px;}
@@ -672,7 +702,7 @@
     <div class="splash-scrim"></div>
     <div class="splash-wrap">
       <div class="splash-ball-wrap"><div class="splash-ball">⚽</div></div>
-      <div class="splash-brand">WHO'S <span>BETTER?</span></div>
+      <div class="splash-brand">PICK YOUR <span>GOAT</span></div>
       <div class="splash-tagline">World Cup Edition — pick a side.</div>
       <div class="splash-actions">
         <button class="splash-btn splash-btn-primary" id="splash-play">
@@ -697,11 +727,19 @@
       <div id="qr-code"></div>
       <div style="margin-top:12px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#333;text-transform:uppercase;letter-spacing:1px;">Scan to open the app</div>
     </div>
+    <a href="https://www.instagram.com/explore/tags/PICKYOURGOAT26/" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:8px;background:linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;text-decoration:none;box-shadow:0 4px 15px rgba(225,48,108,0.4);">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:20px;height:20px;">
+        <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2"/>
+        <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/>
+        <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor"/>
+      </svg>
+      #PICKYOURGOAT26
+    </a>
     <button id="qr-close" style="margin-top:8px;padding:14px 32px;border-radius:10px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:1px;cursor:pointer;">Close</button>
   </div>
 
   <div class="topbar">
-    <div class="brand">WHO'S <span>BETTER?</span></div>
+    <div class="brand" id="topbar-brand" style="cursor:pointer;">PICK YOUR <span>GOAT</span></div>
     <div class="round-pill" id="round-pill">Round 1 / 10</div>
   </div>
 
@@ -740,9 +778,15 @@
         <div class="share-eyebrow">Session Complete</div>
         <div class="share-stat" id="share-stat">6%</div>
         <div class="share-line" id="share-line">You're in the minority who picked <b>Player</b> over Player.</div>
-        <div class="share-brand">WHO'S <span>BETTER?</span> · World Cup Edition</div>
-        <div class="share-hashtag">#WC26BETTER</div>
-        <div class="share-watermark">@werelivinginabundance</div>
+        <div class="share-hashtag">#PICKYOURGOAT26</div>
+        <a class="share-instagram-btn" href="https://www.instagram.com/werelivinginabundance/" target="_blank" rel="noopener noreferrer">
+          <svg class="ig-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2"/>
+            <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/>
+            <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor"/>
+          </svg>
+          @werelivinginabundance
+        </a>
       </div>
     </div>
     <div class="share-actions">
@@ -897,9 +941,9 @@
     {id:"dembele", name:"O. Dembélé", country:"France", flag:"🇫🇷", initials:"OD", grad:"linear-gradient(160deg,#2a4d9e,#e5383b)"},
 
     {id:"bellingham", name:"J. Bellingham", country:"England", flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿", initials:"JB", grad:"linear-gradient(160deg,#d64550,#ffffff20)"},
-    {id:"kane", name:"H. Kane", country:"England", flag:"🏴", initials:"HK", grad:"linear-gradient(160deg,#c9414d,#3a1d21)"},
-    {id:"foden", name:"P. Foden", country:"England", flag:"🏴", initials:"PF", grad:"linear-gradient(160deg,#e05d67,#421f24)"},
-    {id:"saka", name:"B. Saka", country:"England", flag:"🏴", initials:"BS", grad:"linear-gradient(160deg,#d1414c,#2c161a)"},
+{id:"kane", name:"H. Kane", country:"England", flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿", initials:"HK", grad:"linear-gradient(160deg,#c9414d,#3a1d21)"},
+      {id:"foden", name:"P. Foden", country:"England", flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿", initials:"PF", grad:"linear-gradient(160deg,#e05d67,#421f24)"},
+      {id:"saka", name:"B. Saka", country:"England", flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿", initials:"BS", grad:"linear-gradient(160deg,#d1414c,#2c161a)"},
 
     {id:"vinicius", name:"Vinícius Jr.", country:"Brazil", flag:"🇧🇷", initials:"VJ", grad:"linear-gradient(160deg,#ffcc29,#0a7d3a)"},
     {id:"rodrygo", name:"Rodrygo", country:"Brazil", flag:"🇧🇷", initials:"RG", grad:"linear-gradient(160deg,#f4d35e,#0d6e34)"},
@@ -1026,7 +1070,7 @@
         onerror="this.remove(); this.closest('.pcard').classList.remove('has-photo');">
       <div class="shine"></div>
       <div class="idle-shine" style="--tint-core: rgba(${aura},0.6); --tint-edge: rgba(${aura},0.08);"></div>
-      <div class="flag">${p.flag}</div>
+      <div class="${p.country === 'England' ? 'flag-england' : 'flag'}">${p.country === 'England' ? '' : p.flag}</div>
       <div class="pname">${p.name}</div>
       <div class="pcountry">${p.country}</div>
     `;
@@ -1180,9 +1224,7 @@
     const isMinority = winnerPct > 50;
 
     document.getElementById("share-stat").textContent = (isMinority ? minorityPct : winnerPct) + "%";
-    document.getElementById("share-line").innerHTML = isMinority
-      ? `You're in the minority who picked <b>${winner.name}</b> over ${other.name}.`
-      : `You're right on the fence — the crowd is split down the middle on <b>${winner.name}</b> vs ${other.name}.`;
+    document.getElementById("share-line").innerHTML = `Your decisions are shared by <b>${isMinority ? minorityPct : winnerPct}%</b> of players who picked <b>${winner.name}</b> over ${other.name}.`;
 
     document.getElementById("share-photo-left").style.backgroundImage = `url('images/players/${winner.id}.jpg')`;
     document.getElementById("share-photo-right").style.backgroundImage = `url('images/players/${other.id}.jpg')`;
@@ -1232,13 +1274,13 @@
     shareBtn.style.pointerEvents = "none";
     try{
       const blob = await exportShareCardImage();
-      const file = new File([blob], "whos-better.png", { type: "image/png" });
+      const file = new File([blob], "pick-your-goat.png", { type: "image/png" });
 
       if(navigator.canShare && navigator.canShare({ files: [file] })){
-        await navigator.share({
-          files: [file],
-          title: "Who's Better?",
-          text: "Vote on this — Who's Better?",
+await navigator.share({
+            files: [file],
+            title: "PickYourGOAT",
+            text: "Vote on this — PickYourGOAT",
         });
       } else {
         // Desktop / unsupported browsers: download the PNG so it can be
@@ -1246,7 +1288,7 @@
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "whos-better.png";
+        a.download = "pick-your-goat.png";
         document.body.appendChild(a);
         a.click();
         a.remove();
@@ -1342,6 +1384,10 @@
     setActiveScreen(debatesScreen);
     document.querySelectorAll(".navbtn").forEach(n=>n.classList.remove("active"));
     document.querySelector('.navbtn[data-screen="debates-screen"]').classList.add("active");
+  });
+  document.getElementById("topbar-brand").addEventListener("click", ()=>{
+    round = 0;
+    setActiveScreen(splashScreen);
   });
 
   // ---------- QR Code ----------
