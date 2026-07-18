@@ -21,8 +21,8 @@ PLAYERS = [
     ("casemiro", "Casemiro"),
     ("ronaldo", "Cristiano Ronaldo"),
     ("bfernandes", "Bruno Fernandes"),
-    ("leao", "Rafael Leão"),
     ("cancelo", "João Cancelo"),
+    ("neymar", "Neymar"),
 ]
 
 OUT_DIR = os.path.join(os.path.dirname(__file__), "..", "images", "players")

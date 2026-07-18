@@ -148,25 +148,44 @@
     display:flex;flex-direction:column;align-items:center;
     text-align:center;width:100%;max-width:340px;
   }
+  /* Ball is no longer auto-animated — it sits still until tapped, then a
+     tiny JS physics sim takes over (gravity + tap-to-kick), like a keepy-uppy
+     mini-game. See "Splash ball juggle mini-game" in the script below. */
   .splash-ball-wrap{
-    animation: ballBounce 1.7s ease-in-out infinite;
-    margin-bottom:10px;
+    position:relative;
+    height:104px;
+    width:64px;
+    margin:0 auto 4px;
+    cursor:pointer;
+    touch-action:manipulation;
+    -webkit-tap-highlight-color:transparent;
   }
   .splash-ball{
+    position:absolute;
+    left:50%; top:0;
     display:inline-block;
     font-size:42px;
     line-height:1;
-    animation: ballSpin 2.2s linear infinite;
+    transform:translate(-50%,0);
     filter:drop-shadow(0 10px 12px rgba(0,0,0,0.55));
+    will-change:transform;
+    user-select:none;
   }
-  @keyframes ballBounce{
-    0%, 100% { transform:translateY(0); }
-    50%      { transform:translateY(-20px); }
+  .splash-juggle-count{
+    position:absolute;
+    left:50%; bottom:0;
+    transform:translateX(-50%);
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.5px;
+    color:var(--text-dim);
+    opacity:0;
+    transition:opacity .2s ease;
+    pointer-events:none;
+    white-space:nowrap;
   }
-  @keyframes ballSpin{
-    from { transform:rotate(0deg); }
-    to   { transform:rotate(360deg); }
-  }
+  .splash-juggle-count.show{opacity:.85;}
   .splash-brand{
     font-family:'Anton',sans-serif;
     font-size:44px;
@@ -604,6 +623,32 @@
     flex-shrink:0;
   }
 
+  /* Instagram tags for the two players in the result card — sits centered
+     below the card, left tag under the left photo half, right tag under
+     the right photo half, above the burger menu. */
+  .share-social-row{
+    display:flex;
+    justify-content:space-around;
+    width:100%;
+    max-width:320px;
+    margin:12px auto 0;
+  }
+  .share-social-tag{
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.3px;
+    color:var(--text-dim);
+    text-decoration:none;
+    padding:4px 10px;
+    border-radius:6px;
+    transition:color .15s ease, background .15s ease;
+  }
+  .share-social-tag:hover, .share-social-tag:active{
+    color:#fff;
+    background:rgba(255,255,255,0.08);
+  }
+
   /* Play Again / Share are tucked behind a small circular menu below the
      result card, instead of two always-visible buttons — keeps the card
      itself clean so people are more inclined to screenshot it. */
@@ -745,7 +790,10 @@
     <div class="splash-photo right" style="background-image:url('images/players/ronaldo.jpg')"></div>
     <div class="splash-scrim"></div>
     <div class="splash-wrap">
-      <div class="splash-ball-wrap"><div class="splash-ball">⚽</div></div>
+      <div class="splash-ball-wrap" id="splash-ball-wrap">
+        <div class="splash-ball" id="splash-ball">⚽</div>
+        <div class="splash-juggle-count" id="splash-juggle-count"></div>
+      </div>
       <div class="splash-brand">PICK YOUR <span>GOAT</span></div>
       <div class="splash-tagline">World Cup Edition — pick a side.</div>
       <div class="splash-actions">
@@ -832,6 +880,10 @@
           @werelivinginabundance
         </a>
       </div>
+    </div>
+    <div class="share-social-row">
+      <a class="share-social-tag" id="share-ig-left" href="#" target="_blank" rel="noopener noreferrer">@player</a>
+      <a class="share-social-tag" id="share-ig-right" href="#" target="_blank" rel="noopener noreferrer">@player</a>
     </div>
     <div class="share-menu-wrap">
       <button class="share-menu-toggle" id="share-menu-toggle" aria-label="Options">☰</button>
@@ -1004,9 +1056,9 @@
 
   // 9. SPIRAL CASCADE — sine-wave spiral drift + slow gravity-eased descent.
   // Used on the share screen for a white/gold "trophy moment" shower.
-  function fireSpiralCascade(palette){
+  function fireSpiralCascade(palette, count){
     palette = palette || GOLD_WHITE_PALETTE;
-    const count = 80;
+    count = count || 80;
     for(let i = 0; i < count; i++){
       const delay = i * 0.015;
       spawnParticle({
@@ -1053,12 +1105,35 @@
     {id:"rodrygo", name:"Rodrygo", country:"Brazil", flag:"🇧🇷", initials:"RG", grad:"linear-gradient(160deg,#f4d35e,#0d6e34)"},
     {id:"raphinha", name:"Raphinha", country:"Brazil", flag:"🇧🇷", initials:"RP", grad:"linear-gradient(160deg,#f2c744,#0b5e2d)"},
     {id:"casemiro", name:"Casemiro", country:"Brazil", flag:"🇧🇷", initials:"CS", grad:"linear-gradient(160deg,#e8b93b,#0a4d26)"},
+    {id:"neymar", name:"Neymar Jr.", country:"Brazil", flag:"🇧🇷", initials:"NJ", grad:"linear-gradient(160deg,#ffd54f,#0c6b30)"},
 
     {id:"ronaldo", name:"C. Ronaldo", country:"Portugal", flag:"🇵🇹", initials:"CR", grad:"linear-gradient(160deg,#c8102e,#046a38)"},
     {id:"bfernandes", name:"B. Fernandes", country:"Portugal", flag:"🇵🇹", initials:"BF", grad:"linear-gradient(160deg,#b91c34,#0a5c32)"},
-    {id:"leao", name:"R. Leão", country:"Portugal", flag:"🇵🇹", initials:"RL", grad:"linear-gradient(160deg,#c8102e,#0a4d2b)"},
     {id:"cancelo", name:"J. Cancelo", country:"Portugal", flag:"🇵🇹", initials:"JC", grad:"linear-gradient(160deg,#af1830,#083f24)"},
   ];
+
+  const INSTAGRAM_HANDLES = {
+    messi: "leomessi",
+    dibu: "emi_martinez26",
+    julian: "juliaanalvarez",
+    deniro: "enzojfernandez",
+    mbappe: "k.mbappe",
+    griezmann: "antogriezmann",
+    tchouameni: "aurelientchm",
+    dembele: "o.dembele7",
+    bellingham: "judebellingham",
+    kane: "harrykane",
+    foden: "philfoden",
+    saka: "bukayosaka87",
+    vinicius: "vinijr",
+    rodrygo: "rodrygogoes",
+    raphinha: "raphinha",
+    casemiro: "casemiro",
+    ronaldo: "cristiano",
+    bfernandes: "brunofernandes8",
+    cancelo: "jpcancelo",
+    neymar: "neymarjr",
+  };
 
   const RIVALRY_PAIRS = [
     ["messi","ronaldo"],
@@ -1383,6 +1458,23 @@
     document.getElementById("share-photo-left").style.backgroundImage = `url('images/players/${winner.id}.jpg')`;
     document.getElementById("share-photo-right").style.backgroundImage = `url('images/players/${other.id}.jpg')`;
 
+    const igLeft = document.getElementById("share-ig-left");
+    const igRight = document.getElementById("share-ig-right");
+    const winnerHandle = INSTAGRAM_HANDLES[winner.id];
+    const otherHandle = INSTAGRAM_HANDLES[other.id];
+    if(winnerHandle){
+      igLeft.href = `https://www.instagram.com/${winnerHandle}/`;
+      igLeft.textContent = `@${winnerHandle}`;
+      igLeft.style.color = winnerNameColor;
+      igLeft.style.display = "";
+    } else { igLeft.style.display = "none"; }
+    if(otherHandle){
+      igRight.href = `https://www.instagram.com/${otherHandle}/`;
+      igRight.textContent = `@${otherHandle}`;
+      igRight.style.color = otherNameColor;
+      igRight.style.display = "";
+    } else { igRight.style.display = "none"; }
+
     const winnerColors = COUNTRY_FLAG_COLORS[winner.country] || CONFETTI_COLORS;
     const otherColors = COUNTRY_FLAG_COLORS[other.country] || CONFETTI_COLORS;
 
@@ -1575,6 +1667,149 @@ await navigator.share({
   qrModal.addEventListener("click", (e)=>{
     if(e.target === qrModal) qrModal.style.display = "none";
   });
+
+  // ---------- Splash ball juggle mini-game ----------
+  // Ball sits still until tapped. Each tap kicks it upward; gravity pulls it
+  // back down. Tap again before it hits the ground to keep the streak going —
+  // gravity ramps up with the streak so it gets faster (harder) the longer
+  // you keep it up. Lifetime juggle count is tracked quietly in localStorage.
+  (function initJuggleBall(){
+    const jWrap = document.getElementById("splash-ball-wrap");
+    const jBall = document.getElementById("splash-ball");
+    const jCount = document.getElementById("splash-juggle-count");
+    if(!jWrap || !jBall) return;
+
+    const GROUND_Y = 58;         // px below rest position = a "miss"
+    const BASE_GRAVITY = 560;    // px/s^2 at streak 0
+    const GRAVITY_STEP = 24;     // extra gravity per successful juggle
+    const MAX_GRAVITY = 1500;    // cap so it never becomes literally unplayable
+    const KICK_VY = -430;        // upward velocity applied per tap, px/s
+
+    const STORE_KEY = "goat_juggle_stats_v1";
+    function loadStats(){
+      try{ return Object.assign({total:0, best:0}, JSON.parse(localStorage.getItem(STORE_KEY))); }
+      catch(e){ return {total:0, best:0}; }
+    }
+    function saveStats(s){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(s)); }catch(e){} }
+    let stats = loadStats();
+
+    // Ground-landing sequence tuning (bounce-decay -> roll -> fade)
+    const LAND_BOUNCE_DAMP = 0.32;   // how much velocity survives each ground bounce
+    const LAND_STOP_VY = 55;         // below this, stop bouncing and settle
+    const ROLL_DECAY = 0.94;         // per-frame(60fps) horizontal speed decay
+    const FADE_DELAY = 0.16;         // s of settle before fade starts
+    const FADE_DUR = 0.4;            // s fade takes
+
+    let x = 0, y = 0, vx = 0, vy = 0, rot = 0, opacity = 1;
+    let streak = 0;
+    let state = "idle"; // idle | airborne | landed
+    let landT = 0;
+    let lastT = 0;
+
+    function render(){
+      jBall.style.transform = `translate(calc(-50% + ${x}px), ${y}px) rotate(${rot}deg)`;
+      jBall.style.opacity = opacity;
+    }
+
+    function updateCountUI(){
+      if(streak > 0){
+        jCount.textContent = streak;
+        jCount.classList.add("show");
+      } else {
+        jCount.classList.remove("show");
+      }
+    }
+
+    function reset(){
+      x = 0; y = 0; vx = 0; vy = 0; rot = 0; opacity = 1;
+      state = "idle";
+      render();
+    }
+
+    function tick(now){
+      const dt = Math.min((now - lastT) / 1000, 0.032);
+      lastT = now;
+
+      if(state === "airborne"){
+        const gravity = Math.min(BASE_GRAVITY + streak * GRAVITY_STEP, MAX_GRAVITY);
+        vy += gravity * dt;
+        y += vy * dt;
+        rot += vy * dt * 0.15;
+
+        if(y >= GROUND_Y){
+          // missed it — streak over, hand off to the ground-landing sequence
+          if(streak > stats.best){ stats.best = streak; }
+          saveStats(stats);
+          streak = 0;
+          updateCountUI();
+          y = GROUND_Y;
+          vy = -Math.abs(vy) * LAND_BOUNCE_DAMP;      // small residual bounce
+          vx = (Math.random() < 0.5 ? -1 : 1) * (35 + Math.random() * 35); // roll off
+          state = "landed";
+          landT = 0;
+        }
+        render();
+        requestAnimationFrame(tick);
+        return;
+      }
+
+      if(state === "landed"){
+        landT += dt;
+
+        // decaying bounce(s) on the ground under gravity
+        vy += BASE_GRAVITY * dt;
+        y += vy * dt;
+        if(y > GROUND_Y){
+          y = GROUND_Y;
+          vy = Math.abs(vy) > LAND_STOP_VY ? -Math.abs(vy) * LAND_BOUNCE_DAMP : 0;
+        }
+
+        // roll along the ground, decelerating, still spinning
+        x += vx * dt;
+        vx *= Math.pow(ROLL_DECAY, dt * 60);
+        rot += vx * dt * 0.6;
+
+        if(landT > FADE_DELAY){
+          opacity = Math.max(0, 1 - (landT - FADE_DELAY) / FADE_DUR);
+        }
+        render();
+
+        if(landT >= FADE_DELAY + FADE_DUR){
+          reset(); // faded out — ready for the next tap
+          return;
+        }
+        requestAnimationFrame(tick);
+      }
+    }
+
+    function kick(){
+      if(state === "landed") return; // ignore taps mid fall/roll/fade-out
+      vy = KICK_VY;
+      streak++;
+      stats.total++;
+      saveStats(stats);
+      updateCountUI();
+      if(state === "idle"){
+        state = "airborne";
+        lastT = performance.now();
+        requestAnimationFrame(tick);
+      }
+      // reward: a single confetti piece drops per juggle, and every 10th
+      // juggle (10, 20, 30...) drops a full 10-piece spiral burst instead
+      if(typeof fireSpiralCascade === "function"){
+        fireSpiralCascade(GOLD_WHITE_PALETTE, streak % 10 === 0 ? 10 : 1);
+      }
+    }
+
+    // Touch is the primary input here (this lives on the splash screen,
+    // mostly opened on phones) — handle touchstart directly and prevent
+    // the default so no ghost-click / scroll/zoom gesture steals it, and
+    // keep a click listener too for desktop/testing.
+    jWrap.addEventListener("touchstart", (e)=>{ e.preventDefault(); kick(); }, {passive:false});
+    jWrap.addEventListener("click", kick);
+
+    render();
+  })();
 
   // ---------- Init ----------
   setActiveScreen(splashScreen);
