@@ -167,8 +167,13 @@
     font-size:42px;
     line-height:1;
     transform:translate(-50%,0);
-    filter:drop-shadow(0 10px 12px rgba(0,0,0,0.55));
+    /* text-shadow instead of filter:drop-shadow — drop-shadow forces a full
+       per-frame rasterization pass on a continuously-transformed element,
+       which is what was causing the jank on phones. text-shadow composites
+       far more cheaply. */
+    text-shadow:0 8px 10px rgba(0,0,0,0.55);
     will-change:transform;
+    backface-visibility:hidden;
     user-select:none;
   }
   .splash-juggle-count{
@@ -1758,16 +1763,32 @@ await navigator.share({
     let state = "idle"; // idle | airborne | landed
     let landT = 0;
     let lastT = 0;
+    let resultHideTimer = null;
+    const RESULT_DISPLAY_MS = 10000; // keep the final bounce count on screen this long, or until next tap
 
     function render(){
       jBall.style.transform = `translate(calc(-50% + ${x}px), ${y}px) rotate(${rot}deg)`;
       jBall.style.opacity = opacity;
     }
 
+    // Live count while actively juggling
     function updateCountUI(){
-      if(streak > 0){
-        jCount.textContent = streak;
+      jCount.textContent = streak;
+      jCount.classList.add("show");
+    }
+
+    // After a miss, freeze the final tally on screen for a while instead of
+    // it vanishing instantly — gives the player a moment to actually see
+    // what they scored.
+    function showFinalScore(finalStreak){
+      if(resultHideTimer){ clearTimeout(resultHideTimer); resultHideTimer = null; }
+      if(finalStreak > 0){
+        jCount.textContent = finalStreak;
         jCount.classList.add("show");
+        resultHideTimer = setTimeout(()=>{
+          jCount.classList.remove("show");
+          resultHideTimer = null;
+        }, RESULT_DISPLAY_MS);
       } else {
         jCount.classList.remove("show");
       }
@@ -1793,8 +1814,8 @@ await navigator.share({
           // missed it — streak over, hand off to the ground-landing sequence
           if(streak > stats.best){ stats.best = streak; }
           saveStats(stats);
+          showFinalScore(streak); // freeze the tally on screen for a while
           streak = 0;
-          updateCountUI();
           y = GROUND_Y;
           vy = -Math.abs(vy) * LAND_BOUNCE_DAMP;      // small residual bounce
           vx = (Math.random() < 0.5 ? -1 : 1) * (35 + Math.random() * 35); // roll off
@@ -1837,6 +1858,7 @@ await navigator.share({
 
     function kick(){
       if(state === "landed") return; // ignore taps mid fall/roll/fade-out
+      if(resultHideTimer){ clearTimeout(resultHideTimer); resultHideTimer = null; } // new run — drop the frozen score early
       vy = KICK_VY;
       streak++;
       stats.total++;
