@@ -1491,12 +1491,20 @@
 
     const winner = byId[best.winnerId];
     const other = winner.id===best.a.id ? best.b : best.a;
-    const winnerPct = winner.id===best.a.id ? best.pa : best.pb;
+    const matchupPct = winner.id===best.a.id ? best.pa : best.pb;
 
-    document.getElementById("share-stat").textContent = winnerPct + "%";
+    // "X% of people agree" is winner's share of ALL votes ever cast across
+    // the whole roster (real global data), not just this one matchup —
+    // falls back to the local matchup split if no global votes exist yet.
+    const totalAllVotes = Object.values(voteCounts).reduce((sum, n)=>sum+(n||0), 0);
+    const globalPct = totalAllVotes > 0
+      ? Math.round(((voteCounts[winner.id]||0) / totalAllVotes) * 100)
+      : matchupPct;
+
+    document.getElementById("share-stat").textContent = globalPct + "%";
     const winnerNameColor = COUNTRY_AURA[winner.country] ? `rgb(${COUNTRY_AURA[winner.country]})` : "var(--accent2)";
     const otherNameColor = COUNTRY_AURA[other.country] ? `rgb(${COUNTRY_AURA[other.country]})` : "var(--accent2)";
-    document.getElementById("share-line").innerHTML = `Your GOAT is <b style="color:${winnerNameColor}">${winner.name}</b>. <b>${winnerPct}%</b> of people agree.`;
+    document.getElementById("share-line").innerHTML = `Your GOAT is <b style="color:${winnerNameColor}">${winner.name}</b>. <b>${globalPct}%</b> of people agree.`;
 
     document.getElementById("share-photo-left").style.backgroundImage = `url('images/players/${winner.id}.jpg')`;
     document.getElementById("share-photo-right").style.backgroundImage = `url('images/players/${other.id}.jpg')`;
