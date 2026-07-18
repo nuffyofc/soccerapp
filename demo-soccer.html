@@ -204,45 +204,67 @@
     text-transform:uppercase;
   }
   .splash-actions{
-    display:flex;flex-direction:column;gap:14px;
+    display:flex;flex-direction:column;gap:13px;
     width:100%;margin-top:48px;
   }
+  /* Sharp, tilted "speed shape" buttons — steep skew, near-zero corner
+     radius, a racing-stripe accent edge, and a glossy diagonal sheen
+     instead of the old soft rounded pills. */
   .splash-btn{
+    position:relative;
     display:flex;align-items:center;justify-content:center;gap:10px;
     width:100%;
-    padding:18px;
-    border-radius:14px;
+    padding:17px 22px;
+    border-radius:3px;
     font-family:'Barlow Condensed',sans-serif;
     font-size:17px;
-    font-weight:700;
-    letter-spacing:1px;
+    font-weight:800;
+    letter-spacing:1.5px;
     text-transform:uppercase;
-    transform:skewX(-6deg);
+    transform:skewX(-12deg);
     text-decoration:none;
     cursor:pointer;
     border:none;
-    transition:transform .12s ease;
+    overflow:hidden;
+    transition:transform .12s ease, filter .12s ease;
   }
-  .splash-btn:active{transform:skewX(-6deg) scale(0.97);}
-  .splash-btn .ic{transform:skewX(6deg);display:inline-block;font-size:19px;}
+  .splash-btn:active{transform:skewX(-12deg) scale(0.95);filter:brightness(0.92);}
+  .splash-btn .ic{transform:skewX(12deg);display:inline-block;font-size:19px;}
+  .splash-btn::before{
+    /* racing-stripe accent on the leading edge */
+    content:"";
+    position:absolute;
+    left:0; top:0; bottom:0;
+    width:6px;
+    z-index:1;
+  }
+  .splash-btn::after{
+    /* diagonal gloss sweep for a slick, polished finish */
+    content:"";
+    position:absolute;
+    top:0; bottom:0; left:-40%;
+    width:35%;
+    background:linear-gradient(115deg, transparent, rgba(255,255,255,0.28), transparent);
+    transform:skewX(20deg);
+    pointer-events:none;
+  }
   .splash-btn-primary{
-    background:rgba(255,201,77,0.15);
-    color:var(--gold);
-    border:1px solid rgba(255,201,77,0.35);
-    box-shadow:0 0 20px rgba(255,201,77,0.1);
+    background:linear-gradient(90deg, var(--gold), var(--amber));
+    color:#151107;
+    box-shadow:0 8px 24px rgba(255,157,46,0.4), inset 0 1px 0 rgba(255,255,255,0.45);
   }
-  .splash-btn-secondary{
-    background:rgba(255,255,255,0.03);
-    color:var(--text-dim);
-    border:1px solid rgba(255,255,255,0.1);
-  }
+  .splash-btn-primary::before{background:rgba(21,17,7,0.3);}
+  /* Every other splash button is intentionally equal and colorless — same
+     size, same neutral glass fill, plain white text. Only PLAY keeps color. */
+  .splash-btn-secondary,
   .splash-btn-follow{
-    background:rgba(255,255,255,0.02);
-    color:var(--text-dim);
-    border:1px solid rgba(255,255,255,0.06);
-    font-size:14px;
-    padding:14px;
+    background:rgba(255,255,255,0.045);
+    color:#fff;
+    border:1px solid rgba(255,255,255,0.16);
+    box-shadow:0 6px 18px rgba(0,0,0,0.4);
   }
+  .splash-btn-secondary::before,
+  .splash-btn-follow::before{background:rgba(255,255,255,0.2);}
 
   /* ---------- Play screen ---------- */
   .prompt{
@@ -665,7 +687,7 @@
     border-radius:50%;
     background:rgba(255,255,255,0.06);
     border:1px solid rgba(255,255,255,0.18);
-    color:var(--text);
+    color:#fff;
     font-size:16px;
     line-height:1;
     display:flex;
@@ -692,22 +714,45 @@
     transform:translateY(0);
     pointer-events:auto;
   }
+  /* Same sharp, tilted "speed shape" language as the splash-screen buttons —
+     only the primary action keeps color, everything else is neutral glass
+     with plain white text. */
   .btn{
-    padding:14px;
-    border-radius:10px;
+    position:relative;
+    padding:14px 18px;
+    border-radius:3px;
     border:none;
     font-family:'Barlow Condensed',sans-serif;
-    font-weight:700;
+    font-weight:800;
     font-size:16px;
-    letter-spacing:.8px;
+    letter-spacing:1px;
     text-transform:uppercase;
-    transform:skewX(-6deg);
+    transform:skewX(-12deg);
     cursor:pointer;
-    transition:transform .1s ease;
+    overflow:hidden;
+    transition:transform .1s ease, filter .1s ease;
   }
-  .btn:active{transform:skewX(-6deg) scale(0.97);}
+  .btn:active{transform:skewX(-12deg) scale(0.95);filter:brightness(0.92);}
+  .btn::before{
+    content:"";
+    position:absolute;
+    left:0; top:0; bottom:0;
+    width:5px;
+    z-index:1;
+  }
+  .btn::after{
+    content:"";
+    position:absolute;
+    top:0; bottom:0; left:-40%;
+    width:35%;
+    background:linear-gradient(115deg, transparent, rgba(255,255,255,0.25), transparent);
+    transform:skewX(20deg);
+    pointer-events:none;
+  }
   .btn-primary{background:linear-gradient(90deg,var(--gold),var(--amber));color:#151107;box-shadow:0 6px 20px rgba(255,201,77,0.35);}
-  .btn-ghost{background:rgba(255,255,255,0.04);color:var(--text);border:1px solid rgba(255,255,255,0.15);}
+  .btn-primary::before{background:rgba(21,17,7,0.3);}
+  .btn-ghost{background:rgba(255,255,255,0.045);color:#fff;border:1px solid rgba(255,255,255,0.16);}
+  .btn-ghost::before{background:rgba(255,255,255,0.2);}
   .btn-sm{padding:9px 14px;font-size:12px;}
 
   /* ---------- Hot Debates screen ---------- */
@@ -827,7 +872,7 @@
       </svg>
       #PICKYOURGOAT26
     </a>
-    <button id="qr-close" style="margin-top:8px;padding:14px 32px;border-radius:10px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:1px;cursor:pointer;">Close</button>
+    <button id="qr-close" class="btn btn-ghost" style="margin-top:8px;padding:14px 32px;">Close</button>
   </div>
 
   <div class="topbar">
