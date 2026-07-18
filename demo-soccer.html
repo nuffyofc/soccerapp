@@ -13,6 +13,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Anton&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
   :root{
     --bg:#07080a;
@@ -966,50 +967,85 @@
   ];
 
   const byId = Object.fromEntries(PLAYERS.map(p=>[p.id,p]));
-
-  // ---------- Fake persisted "crowd" vote store ----------
-  const STORE_KEY = "wb_votes_soccer_solo_v1";
-  function loadVotes(){
-    try{ return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }catch(e){ return {}; }
-  }
-  function saveVotes(v){ localStorage.setItem(STORE_KEY, JSON.stringify(v)); }
   function pairKey(a,b){ return [a,b].sort().join("__"); }
 
-  let votes = loadVotes();
+  // ---------- Real vote store (Supabase) ----------
+  // Fill these in after creating your Supabase project (Settings > API).
+  const SUPABASE_URL = "https://mcbgiwpfbkhmfuczxzry.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_nZhsBcpnKam-3Kbv4KKijw_g_FqPNbo";
 
-  function seedIfEmpty(){
-    if(Object.keys(votes).length) return;
-    // seed rivalry pairs near 50/50, and a handful of random pairs, so Hot Debates + % feel alive on first load
-    RIVALRY_PAIRS.forEach(([a,b])=>{
-      const k = pairKey(a,b);
-      const skew = 0.42 + Math.random()*0.16; // 42-58%
-      const total = 180 + Math.floor(Math.random()*400);
-      const av = Math.round(total*skew);
-      votes[k] = {[a]: av, [b]: total-av};
-    });
-    for(let i=0;i<10;i++){
-      const a = PLAYERS[Math.floor(Math.random()*PLAYERS.length)];
-      const b = PLAYERS[Math.floor(Math.random()*PLAYERS.length)];
-      if(a.id===b.id) continue;
-      const k = pairKey(a.id,b.id);
-      if(votes[k]) continue;
-      const skew = Math.random();
-      const total = 20 + Math.floor(Math.random()*150);
-      const av = Math.round(total*skew);
-      votes[k] = {[a.id]: av, [b.id]: total-av};
+  const sb = (typeof supabase !== "undefined" && SUPABASE_URL.startsWith("http"))
+    ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+    : null;
+
+  // In-memory global vote totals per player: { playerId: totalVotes }
+  let voteCounts = {};
+  // Increments made locally since the last successful flush to the DB.
+  // Batched to keep write-request volume well under the free-tier quota
+  // instead of firing one API call per tap.
+  let pendingDeltas = {};
+  let pendingCount = 0;
+  let flushTimer = null;
+  const FLUSH_VOTE_THRESHOLD = 8;     // flush after this many local votes
+  const FLUSH_INTERVAL_MS = 20000;    // ...or after this many ms, whichever first
+
+  async function loadVoteCounts(){
+    if(!sb){
+      console.warn("Supabase not configured — falling back to zeroed local counts. Set SUPABASE_URL / SUPABASE_ANON_KEY.");
+      PLAYERS.forEach(p=>{ voteCounts[p.id] = 0; });
+      return;
     }
-    saveVotes(votes);
+    const { data, error } = await sb.from("player_votes").select("id, votes");
+    if(error){
+      console.error("Failed to load vote counts:", error);
+      PLAYERS.forEach(p=>{ voteCounts[p.id] = 0; });
+      return;
+    }
+    data.forEach(row=>{ voteCounts[row.id] = row.votes; });
+    // Self-heal: if the roster has grown since the DB was seeded, add the
+    // missing players at 0 in a single batched upsert.
+    const missing = PLAYERS.filter(p=>!(p.id in voteCounts));
+    if(missing.length){
+      const rows = missing.map(p=>({id:p.id, votes:0}));
+      const { error: upErr } = await sb.from("player_votes").upsert(rows, {onConflict:"id", ignoreDuplicates:true});
+      if(upErr) console.error("Failed to seed missing players:", upErr);
+      missing.forEach(p=>{ voteCounts[p.id] = 0; });
+    }
   }
-  seedIfEmpty();
+  const voteDataReady = loadVoteCounts();
+
+  function scheduleFlush(){
+    if(pendingCount >= FLUSH_VOTE_THRESHOLD){ flushVotes(); return; }
+    if(!flushTimer) flushTimer = setTimeout(flushVotes, FLUSH_INTERVAL_MS);
+  }
+
+  async function flushVotes(){
+    if(flushTimer){ clearTimeout(flushTimer); flushTimer = null; }
+    if(!pendingCount || !sb) return;
+    const deltas = pendingDeltas;
+    pendingDeltas = {};
+    pendingCount = 0;
+    const { error } = await sb.rpc("increment_votes", { deltas });
+    if(error){
+      console.error("Vote flush failed, re-queueing:", error);
+      Object.entries(deltas).forEach(([id,n])=>{
+        pendingDeltas[id] = (pendingDeltas[id]||0) + n;
+        pendingCount += n;
+      });
+    }
+  }
+
+  document.addEventListener("visibilitychange", ()=>{
+    if(document.visibilityState === "hidden") flushVotes();
+  });
+  window.addEventListener("beforeunload", flushVotes);
 
   function recordVote(aId,bId,winnerId){
-    const k = pairKey(aId,bId);
-    if(!votes[k]) votes[k] = {[aId]:0,[bId]:0};
-    if(votes[k][aId]===undefined) votes[k][aId]=0;
-    if(votes[k][bId]===undefined) votes[k][bId]=0;
-    votes[k][winnerId] += 1;
-    saveVotes(votes);
-    return votes[k];
+    voteCounts[winnerId] = (voteCounts[winnerId]||0) + 1;
+    pendingDeltas[winnerId] = (pendingDeltas[winnerId]||0) + 1;
+    pendingCount++;
+    scheduleFlush();
+    return { [aId]: voteCounts[aId]||0, [bId]: voteCounts[bId]||0 };
   }
 
   // ---------- Session / pairing ----------
@@ -1304,7 +1340,8 @@ await navigator.share({
     }
   });
 
-  function startSession(){
+  async function startSession(){
+    await voteDataReady;
     round = 0;
     usedPairs = new Set();
     sessionResults = [];
@@ -1313,14 +1350,16 @@ await navigator.share({
   }
 
   // ---------- Hot Debates screen ----------
+  // Votes are now stored as a single global total per player (not per pair),
+  // so "closest debate" is approximated from the two rivals' overall vote
+  // totals rather than head-to-head history for that exact matchup.
   function renderDebates(){
     const list = document.getElementById("debates-list");
-    const rows = Object.entries(votes).map(([k, v])=>{
-      const ids = k.split("__");
-      const [id1,id2] = ids;
-      const t = (v[id1]||0)+(v[id2]||0);
+    const rows = RIVALRY_PAIRS.map(([id1,id2])=>{
+      const v1 = voteCounts[id1]||0, v2 = voteCounts[id2]||0;
+      const t = v1+v2;
       if(t < 20) return null;
-      const p1pct = Math.round(((v[id1]||0)/t)*100);
+      const p1pct = Math.round((v1/t)*100);
       const p2pct = 100-p1pct;
       const dist = Math.abs(50-p1pct);
       return {id1,id2,p1pct,p2pct,t,dist};
@@ -1379,7 +1418,8 @@ await navigator.share({
   // ---------- Splash screen ----------
   const splashScreen = document.getElementById("splash-screen");
   document.getElementById("splash-play").addEventListener("click", startSession);
-  document.getElementById("splash-debates").addEventListener("click", ()=>{
+  document.getElementById("splash-debates").addEventListener("click", async ()=>{
+    await voteDataReady;
     renderDebates();
     setActiveScreen(debatesScreen);
     document.querySelectorAll(".navbtn").forEach(n=>n.classList.remove("active"));
@@ -1395,7 +1435,7 @@ await navigator.share({
   const qrCodeEl = document.getElementById("qr-code");
 
   document.getElementById("splash-qr").addEventListener("click", ()=>{
-    const url = "https://yesnoapp.vercel.app";
+    const url = "https://goat26.vercel.app";
     qrCodeEl.innerHTML = "";
     if(typeof qrcode !== "undefined"){
       const qr = qrcode(0, "M");
