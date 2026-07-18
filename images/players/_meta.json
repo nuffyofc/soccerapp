@@ -60,14 +60,14 @@
     "status": "ok"
   },
   {
-    "id": "griezmann",
-    "title": "Antoine Griezmann",
-    "thumb": "https://upload.wikimedia.org/wikipedia/commons/6/6e/FRA-ARG_%2810%29_%28cropped%29.jpg",
-    "file": "FRA-ARG_(10)_(cropped).jpg",
+    "id": "yamal",
+    "title": "Lamine Yamal",
+    "thumb": null,
+    "file": "Lamine_Yamal_France_v_Spain_7.24.26-057.jpg",
     "license": {
-      "license": "CC BY-SA 3.0",
-      "artist": "Антон Зайцев",
-      "credit": "<a rel=\"nofollow\" class=\"external text\" href=\"https://www.soccer.ru/galery/1056072/photo/734622\">soccer.ru</a>"
+      "license": "unverified — user-provided image, not sourced via the Wikipedia/Commons API pipeline",
+      "artist": null,
+      "credit": null
     },
     "status": "ok"
   },

@@ -30,10 +30,11 @@
     "license": "CC BY-SA 4.0"
   },
   {
-    "id": "griezmann",
-    "wikipedia_article": "Antoine Griezmann",
-    "commons_file": "FRA-ARG_(10)_(cropped).jpg",
-    "license": "CC BY-SA 3.0"
+    "id": "yamal",
+    "wikipedia_article": "Lamine Yamal",
+    "commons_file": "Lamine_Yamal_France_v_Spain_7.24.26-057.jpg",
+    "license": "user-provided",
+    "note": "Sourced by user; manually re-cropped (face-detection mis-centered on background players in the crowd)."
   },
   {
     "id": "tchouameni",

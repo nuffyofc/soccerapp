@@ -8,7 +8,6 @@ PLAYERS = [
     ("julian", "Julián Álvarez"),
     ("deniro", "Enzo Fernández"),
     ("mbappe", "Kylian Mbappé"),
-    ("griezmann", "Antoine Griezmann"),
     ("tchouameni", "Aurélien Tchouaméni"),
     ("dembele", "Ousmane Dembélé"),
     ("bellingham", "Jude Bellingham"),
@@ -23,6 +22,7 @@ PLAYERS = [
     ("bfernandes", "Bruno Fernandes"),
     ("cancelo", "João Cancelo"),
     ("neymar", "Neymar"),
+    # ("yamal", "Lamine Yamal"),  # sourced manually by the user instead — see CREDITS.json note
 ]
 
 OUT_DIR = os.path.join(os.path.dirname(__file__), "..", "images", "players")

@@ -971,6 +971,7 @@
     "England":   ['#CE1124','#FFFFFF','#1C2C5B'],
     "Brazil":    ['#009739','#FEDD00','#002776'],
     "Portugal":  ['#046A38','#DA291C','#FFC72C'],
+    "Spain":     ['#AA151B','#F1BF00','#AA151B'],
   };
   const canvas = document.getElementById('confetti-canvas');
   const ctx = canvas.getContext('2d');
@@ -1142,9 +1143,10 @@
     {id:"deniro", name:"E. Fernández", country:"Argentina", flag:"🇦🇷", initials:"EF", grad:"linear-gradient(160deg,#6ea8d8,#22436b)"},
 
     {id:"mbappe", name:"K. Mbappé", country:"France", flag:"🇫🇷", initials:"KM", grad:"linear-gradient(160deg,#274b9e,#e63946)"},
-    {id:"griezmann", name:"A. Griezmann", country:"France", flag:"🇫🇷", initials:"AG", grad:"linear-gradient(160deg,#3457a6,#c1121f)"},
     {id:"tchouameni", name:"A. Tchouaméni", country:"France", flag:"🇫🇷", initials:"AT", grad:"linear-gradient(160deg,#1d3a8f,#d62839)"},
     {id:"dembele", name:"O. Dembélé", country:"France", flag:"🇫🇷", initials:"OD", grad:"linear-gradient(160deg,#2a4d9e,#e5383b)"},
+
+    {id:"yamal", name:"L. Yamal", country:"Spain", flag:"🇪🇸", initials:"LY", grad:"linear-gradient(160deg,#aa151b,#f1bf00)"},
 
     {id:"bellingham", name:"J. Bellingham", country:"England", flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿", initials:"JB", grad:"linear-gradient(160deg,#d64550,#ffffff20)"},
 {id:"kane", name:"H. Kane", country:"England", flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿", initials:"HK", grad:"linear-gradient(160deg,#c9414d,#3a1d21)"},
@@ -1168,7 +1170,6 @@
     julian: "juliaanalvarez",
     deniro: "enzojfernandez",
     mbappe: "k.mbappe",
-    griezmann: "antogriezmann",
     tchouameni: "aurelientchm",
     dembele: "o.dembele7",
     bellingham: "judebellingham",
@@ -1183,6 +1184,7 @@
     bfernandes: "brunofernandes8",
     cancelo: "jpcancelo",
     neymar: "neymarjr",
+    yamal: "lamineyamal",
   };
 
   const RIVALRY_PAIRS = [
@@ -1312,12 +1314,12 @@
     "England":   "206,17,38",     // red
     "Brazil":    "0,151,57",      // green
     "Portugal":  "218,41,28",     // red
+    "Spain":     "241,191,0",     // gold
   };
 
   // per-player crop tweaks for photos where the default center framing
   // cuts off part of the face (e.g. profile shots)
   const PHOTO_POSITION = {
-    "griezmann": "67% center",
   };
 
   const idleShineTimers = new WeakMap();
