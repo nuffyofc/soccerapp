@@ -914,7 +914,7 @@
       <div class="share-content">
         <div class="share-eyebrow">Session Complete</div>
         <div class="share-stat" id="share-stat">6%</div>
-        <div class="share-line" id="share-line">Your GOAT is <b>Player</b>. <b>50%</b> of people agree.</div>
+        <div class="share-line" id="share-line">Your GOAT is <b>Player</b>. <b>1,234 people (50%)</b> agree.</div>
         <div class="share-hashtag">#PICKYOURGOAT26</div>
         <a class="share-instagram-btn" href="https://www.instagram.com/werelivinginabundance/" target="_blank" rel="noopener noreferrer">
           <svg class="ig-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1501,10 +1501,12 @@
       ? Math.round(((voteCounts[winner.id]||0) / totalAllVotes) * 100)
       : matchupPct;
 
+    const winnerVoteCount = voteCounts[winner.id] || 0;
+
     document.getElementById("share-stat").textContent = globalPct + "%";
     const winnerNameColor = COUNTRY_AURA[winner.country] ? `rgb(${COUNTRY_AURA[winner.country]})` : "var(--accent2)";
     const otherNameColor = COUNTRY_AURA[other.country] ? `rgb(${COUNTRY_AURA[other.country]})` : "var(--accent2)";
-    document.getElementById("share-line").innerHTML = `Your GOAT is <b style="color:${winnerNameColor}">${winner.name}</b>. <b>${globalPct}%</b> of people agree.`;
+    document.getElementById("share-line").innerHTML = `Your GOAT is <b style="color:${winnerNameColor}">${winner.name}</b>. <b>${winnerVoteCount.toLocaleString()} people (${globalPct}%)</b> agree.`;
 
     document.getElementById("share-photo-left").style.backgroundImage = `url('images/players/${winner.id}.jpg')`;
     document.getElementById("share-photo-right").style.backgroundImage = `url('images/players/${other.id}.jpg')`;
