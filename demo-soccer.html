@@ -596,7 +596,6 @@
     text-align:center;
     padding:26px;
   }
-  .share-eyebrow{font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);font-weight:800;text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000,0 2px 8px rgba(0,0,0,0.8);}
   .share-stat{
     font-family:'Anton',sans-serif;
     font-size:60px;font-weight:400;line-height:1;margin:14px 0 6px;
@@ -655,25 +654,52 @@
      the right photo half, above the burger menu. */
   .share-social-row{
     display:flex;
-    justify-content:space-around;
+    justify-content:center;
+    gap:10px;
     width:100%;
     max-width:320px;
-    margin:12px auto 0;
+    margin:14px auto 0;
   }
+  /* Proper tilted "speed shape" buttons matching the rest of the app,
+     tinted per player via --tag-color set in JS. */
   .share-social-tag{
+    position:relative;
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
     font-family:'Barlow Condensed',sans-serif;
     font-size:12px;
-    font-weight:700;
-    letter-spacing:.3px;
-    color:var(--text-dim);
+    font-weight:800;
+    letter-spacing:.6px;
+    color:#fff;
     text-decoration:none;
-    padding:4px 10px;
-    border-radius:6px;
-    transition:color .15s ease, background .15s ease;
+    padding:9px 8px;
+    border-radius:3px;
+    overflow:hidden;
+    white-space:nowrap;
+    background:rgba(255,255,255,0.05);
+    border:1px solid var(--tag-color, rgba(255,255,255,0.18));
+    box-shadow:0 5px 14px rgba(0,0,0,0.4);
+    transform:skewX(-12deg);
+    transition:transform .12s ease, background .15s ease;
+  }
+  .share-social-tag > *{transform:skewX(12deg);}
+  .share-social-tag::before{
+    content:"";
+    position:absolute;
+    left:0; top:0; bottom:0;
+    width:4px;
+    background:var(--tag-color, rgba(255,255,255,0.35));
+    z-index:1;
   }
   .share-social-tag:hover, .share-social-tag:active{
-    color:#fff;
-    background:rgba(255,255,255,0.08);
+    background:rgba(255,255,255,0.11);
+    transform:skewX(-12deg) scale(0.97);
+  }
+  .share-social-tag .ig-glyph{
+    width:12px;height:12px;flex-shrink:0;
   }
 
   /* Play Again / Share are tucked behind a small circular menu below the
@@ -917,7 +943,6 @@
       <div class="share-scrim"></div>
       <div class="share-glass"></div>
       <div class="share-content">
-        <div class="share-eyebrow">Session Complete</div>
         <div class="share-stat" id="share-stat">6%</div>
         <div class="share-line" id="share-line">Your GOAT is <b>Player</b>. <b>1,234 people (50%)</b> agree.</div>
         <div class="share-hashtag">#PICKYOURGOAT26</div>
@@ -932,8 +957,22 @@
       </div>
     </div>
     <div class="share-social-row">
-      <a class="share-social-tag" id="share-ig-left" href="#" target="_blank" rel="noopener noreferrer">@player</a>
-      <a class="share-social-tag" id="share-ig-right" href="#" target="_blank" rel="noopener noreferrer">@player</a>
+      <a class="share-social-tag" id="share-ig-left" href="#" target="_blank" rel="noopener noreferrer">
+        <svg class="ig-glyph" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2.5"/>
+          <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2.5"/>
+          <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor"/>
+        </svg>
+        <span class="tag-handle">@player</span>
+      </a>
+      <a class="share-social-tag" id="share-ig-right" href="#" target="_blank" rel="noopener noreferrer">
+        <svg class="ig-glyph" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2.5"/>
+          <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2.5"/>
+          <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor"/>
+        </svg>
+        <span class="tag-handle">@player</span>
+      </a>
     </div>
     <div class="share-menu-wrap">
       <button class="share-menu-toggle" id="share-menu-toggle" aria-label="Options">☰</button>
@@ -1524,14 +1563,14 @@
     const otherHandle = INSTAGRAM_HANDLES[other.id];
     if(winnerHandle){
       igLeft.href = `https://www.instagram.com/${winnerHandle}/`;
-      igLeft.textContent = `@${winnerHandle}`;
-      igLeft.style.color = winnerNameColor;
+      igLeft.querySelector(".tag-handle").textContent = `@${winnerHandle}`;
+      igLeft.style.setProperty("--tag-color", winnerNameColor);
       igLeft.style.display = "";
     } else { igLeft.style.display = "none"; }
     if(otherHandle){
       igRight.href = `https://www.instagram.com/${otherHandle}/`;
-      igRight.textContent = `@${otherHandle}`;
-      igRight.style.color = otherNameColor;
+      igRight.querySelector(".tag-handle").textContent = `@${otherHandle}`;
+      igRight.style.setProperty("--tag-color", otherNameColor);
       igRight.style.display = "";
     } else { igRight.style.display = "none"; }
 
