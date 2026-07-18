@@ -578,34 +578,76 @@
     text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000,0 2px 8px rgba(0,0,0,0.8);
   }
   .share-instagram-btn{
-    margin-top:10px;
+    margin-top:8px;
     display:inline-flex;
     align-items:center;
-    gap:8px;
-    padding:10px 18px;
-    border-radius:8px;
-    background:linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    gap:6px;
+    padding:5px 12px;
+    border-radius:6px;
+    background:#8a8a8a;
     color:#fff;
-    font-size:14px;
+    font-size:9px;
     font-weight:700;
     text-decoration:none;
     letter-spacing:.5px;
-    box-shadow:0 4px 15px rgba(225,48,108,0.4);
-    transition:transform .15s ease, box-shadow .15s ease;
+    box-shadow:0 2px 8px rgba(0,0,0,0.3);
+    opacity:0.5;
+    transition:transform .15s ease, opacity .15s ease;
   }
   .share-instagram-btn:hover{
     transform:translateY(-2px);
-    box-shadow:0 6px 20px rgba(225,48,108,0.5);
+    opacity:0.8;
   }
   .ig-icon{
-    width:20px;
-    height:20px;
+    width:12px;
+    height:12px;
     flex-shrink:0;
   }
 
-  .share-actions{display:flex;gap:10px;margin-top:22px;width:100%;max-width:320px;}
+  /* Play Again / Share are tucked behind a small circular menu below the
+     result card, instead of two always-visible buttons — keeps the card
+     itself clean so people are more inclined to screenshot it. */
+  .share-menu-wrap{
+    margin-top:16px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+  }
+  .share-menu-toggle{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.18);
+    color:var(--text);
+    font-size:16px;
+    line-height:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition:transform .15s ease, background .15s ease;
+  }
+  .share-menu-toggle:active{transform:scale(0.92);}
+  .share-menu-toggle.open{background:rgba(255,255,255,0.14);transform:rotate(90deg);}
+  .share-menu-popup{
+    display:flex;
+    gap:8px;
+    max-height:0;
+    opacity:0;
+    transform:translateY(-6px);
+    overflow:hidden;
+    pointer-events:none;
+    transition:max-height .25s ease, opacity .2s ease, transform .2s ease;
+  }
+  .share-menu-popup.open{
+    max-height:60px;
+    opacity:1;
+    transform:translateY(0);
+    pointer-events:auto;
+  }
   .btn{
-    flex:1;
     padding:14px;
     border-radius:10px;
     border:none;
@@ -621,6 +663,7 @@
   .btn:active{transform:skewX(-6deg) scale(0.97);}
   .btn-primary{background:linear-gradient(90deg,var(--gold),var(--amber));color:#151107;box-shadow:0 6px 20px rgba(255,201,77,0.35);}
   .btn-ghost{background:rgba(255,255,255,0.04);color:var(--text);border:1px solid rgba(255,255,255,0.15);}
+  .btn-sm{padding:9px 14px;font-size:12px;}
 
   /* ---------- Hot Debates screen ---------- */
   #debates-screen{padding:16px;overflow-y:auto;}
@@ -790,9 +833,12 @@
         </a>
       </div>
     </div>
-    <div class="share-actions">
-      <button class="btn btn-ghost" id="btn-again">Play Again</button>
-      <button class="btn btn-primary" id="btn-share">Share ↗</button>
+    <div class="share-menu-wrap">
+      <button class="share-menu-toggle" id="share-menu-toggle" aria-label="Options">☰</button>
+      <div class="share-menu-popup" id="share-menu-popup">
+        <button class="btn btn-ghost btn-sm" id="btn-again">Play Again</button>
+        <button class="btn btn-primary btn-sm" id="btn-share">Share ↗</button>
+      </div>
     </div>
   </div>
 
@@ -888,8 +934,12 @@
       p.age += dt;
       if(p.age >= p.life || p.y > CH + 40) return false;
 
-      p.vy = Math.min(p.vy + GRAVITY * dt, TERMINAL_VY);
-      p.vx *= Math.pow(AIR_DRAG, dt*60);
+      const g = p.gravity !== undefined ? p.gravity : GRAVITY;
+      const drag = p.drag !== undefined ? p.drag : AIR_DRAG;
+      const termVy = p.terminalVy !== undefined ? p.terminalVy : TERMINAL_VY;
+
+      p.vy = Math.min(p.vy + g * dt, termVy);
+      p.vx *= Math.pow(drag, dt*60);
       p.vy *= Math.pow(0.997, dt*60); // slight vertical damping too
       p.x += p.vx * dt;
       p.y += p.vy * dt;
@@ -900,7 +950,8 @@
       const fadeStart = 0.72;
       const opacity = lifeFrac < fadeStart ? 1 : Math.max(0, 1 - (lifeFrac-fadeStart)/(1-fadeStart));
 
-      const flutterScaleX = Math.cos(p.wobble); // -1..1, simulates edge-on flip
+      const useFlutter = p.useFlutter !== false; // default true, matches original confetti look
+      const flutterScaleX = useFlutter ? Math.cos(p.wobble) : 1; // -1..1, simulates edge-on flip
 
       ctx.save();
       ctx.globalAlpha = opacity;
@@ -928,6 +979,58 @@
   }
 
   function fireConfetti(side, count, colors){ spawnConfetti(side, count, colors); }
+
+  // ---------- Generic particle helpers (used by effects beyond confetti bursts) ----------
+  function randRange(min, max){ return min + Math.random() * (max - min); }
+  function pickColor(palette){ return palette[(Math.random() * palette.length) | 0]; }
+
+  function spawnParticle(opts){
+    particles.push(Object.assign({
+      age: 0,
+      rotation: 0,
+      rotSpeed: 0,
+      wobble: 0,
+      wobbleSpeed: 0,
+      shape: 'rect',
+      life: 2,
+    }, opts));
+  }
+
+  function ensureRunning(){
+    if(!rafId){ lastT = performance.now(); rafId = requestAnimationFrame(tick); }
+  }
+
+  const GOLD_WHITE_PALETTE = ['#ffffff', '#ffe9b8', '#ffc94d', '#d4af37'];
+
+  // 9. SPIRAL CASCADE — sine-wave spiral drift + slow gravity-eased descent.
+  // Used on the share screen for a white/gold "trophy moment" shower.
+  function fireSpiralCascade(palette){
+    palette = palette || GOLD_WHITE_PALETTE;
+    const count = 80;
+    for(let i = 0; i < count; i++){
+      const delay = i * 0.015;
+      spawnParticle({
+        x: CW * 0.5 + Math.sin(i * 0.4) * CW * 0.35,
+        y: randRange(-150, -10),
+        vx: Math.sin(i * 0.5) * 80,
+        vy: randRange(60, 160),
+        w: randRange(6, 12),
+        h: randRange(8, 14),
+        color: pickColor(palette),
+        shape: 'rect',
+        rotation: i * 0.2,
+        rotSpeed: randRange(1, 4),
+        wobble: i * 0.8,
+        wobbleSpeed: randRange(2, 4),
+        gravity: 150,
+        drag: 0.998,
+        terminalVy: 200,
+        useFlutter: true,
+        life: randRange(3.0, 5.0),
+      });
+    }
+    ensureRunning();
+  }
 
   // ---------- Data: soccer / World Cup only ----------
   const PLAYERS = [
@@ -1172,7 +1275,7 @@
     cardB.classList.add(winnerKey==="b" ? "win":"lose", "locked");
     const winnerPlayer = winnerKey==="a" ? a : b;
     const winnerColors = COUNTRY_FLAG_COLORS[winnerPlayer.country] || CONFETTI_COLORS;
-    fireConfetti(winnerKey==="a" ? "left" : "right", 30, winnerColors);
+    fireConfetti(winnerKey==="a" ? "left" : "right", 60, winnerColors);
 
     nameA.textContent = a.name;
     nameB.textContent = b.name;
@@ -1247,7 +1350,20 @@
   const playScreen = document.getElementById("play-screen");
   const debatesScreen = document.getElementById("debates-screen");
 
+  // Play Again / Share live behind a small circular menu below the card
+  const shareMenuToggle = document.getElementById("share-menu-toggle");
+  const shareMenuPopup = document.getElementById("share-menu-popup");
+  shareMenuToggle.addEventListener("click", ()=>{
+    const nowOpen = shareMenuToggle.classList.toggle("open");
+    shareMenuPopup.classList.toggle("open", nowOpen);
+  });
+  function closeShareMenu(){
+    shareMenuToggle.classList.remove("open");
+    shareMenuPopup.classList.remove("open");
+  }
+
   function showShareScreen(){
+    closeShareMenu();
     // feature the closest-split (most "you're in the minority") result from this session
     let best = sessionResults[0];
     sessionResults.forEach(r=>{ if(r.splitDistance < best.splitDistance) best = r; });
@@ -1260,7 +1376,9 @@
     const isMinority = winnerPct > 50;
 
     document.getElementById("share-stat").textContent = (isMinority ? minorityPct : winnerPct) + "%";
-    document.getElementById("share-line").innerHTML = `Your decisions are shared by <b>${isMinority ? minorityPct : winnerPct}%</b> of players who picked <b>${winner.name}</b> over ${other.name}.`;
+    const winnerNameColor = COUNTRY_AURA[winner.country] ? `rgb(${COUNTRY_AURA[winner.country]})` : "var(--accent2)";
+    const otherNameColor = COUNTRY_AURA[other.country] ? `rgb(${COUNTRY_AURA[other.country]})` : "var(--accent2)";
+    document.getElementById("share-line").innerHTML = `Your decisions are shared by <b>${isMinority ? minorityPct : winnerPct}%</b> of players who picked <b style="color:${winnerNameColor}">${winner.name}</b> over <b style="color:${otherNameColor}">${other.name}</b>.`;
 
     document.getElementById("share-photo-left").style.backgroundImage = `url('images/players/${winner.id}.jpg')`;
     document.getElementById("share-photo-right").style.backgroundImage = `url('images/players/${other.id}.jpg')`;
@@ -1269,9 +1387,11 @@
     const otherColors = COUNTRY_FLAG_COLORS[other.country] || CONFETTI_COLORS;
 
     setActiveScreen(shareScreen);
-    fireConfetti("left", 45, winnerColors);
-    fireConfetti("right", 45, otherColors);
-    setTimeout(()=>{ fireConfetti("left", 25, winnerColors); fireConfetti("right", 25, otherColors); }, 400);
+    // white/gold spiral shower over the result card — only effect on this screen,
+    // repeated 3 times total with a 1s gap between each drop
+    fireSpiralCascade();
+    setTimeout(()=>fireSpiralCascade(), 1000);
+    setTimeout(()=>fireSpiralCascade(), 2000);
   }
 
   document.getElementById("btn-again").addEventListener("click", startSession);
