@@ -914,7 +914,7 @@
       <div class="share-content">
         <div class="share-eyebrow">Session Complete</div>
         <div class="share-stat" id="share-stat">6%</div>
-        <div class="share-line" id="share-line">You're in the minority who picked <b>Player</b> over Player.</div>
+        <div class="share-line" id="share-line">Your GOAT is <b>Player</b>. <b>50%</b> of people agree.</div>
         <div class="share-hashtag">#PICKYOURGOAT26</div>
         <a class="share-instagram-btn" href="https://www.instagram.com/werelivinginabundance/" target="_blank" rel="noopener noreferrer">
           <svg class="ig-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1492,13 +1492,11 @@
     const winner = byId[best.winnerId];
     const other = winner.id===best.a.id ? best.b : best.a;
     const winnerPct = winner.id===best.a.id ? best.pa : best.pb;
-    const minorityPct = 100-winnerPct;
-    const isMinority = winnerPct > 50;
 
-    document.getElementById("share-stat").textContent = (isMinority ? minorityPct : winnerPct) + "%";
+    document.getElementById("share-stat").textContent = winnerPct + "%";
     const winnerNameColor = COUNTRY_AURA[winner.country] ? `rgb(${COUNTRY_AURA[winner.country]})` : "var(--accent2)";
     const otherNameColor = COUNTRY_AURA[other.country] ? `rgb(${COUNTRY_AURA[other.country]})` : "var(--accent2)";
-    document.getElementById("share-line").innerHTML = `Your decisions are shared by <b>${isMinority ? minorityPct : winnerPct}%</b> of players who picked <b style="color:${winnerNameColor}">${winner.name}</b> over <b style="color:${otherNameColor}">${other.name}</b>.`;
+    document.getElementById("share-line").innerHTML = `Your GOAT is <b style="color:${winnerNameColor}">${winner.name}</b>. <b>${winnerPct}%</b> of people agree.`;
 
     document.getElementById("share-photo-left").style.backgroundImage = `url('images/players/${winner.id}.jpg')`;
     document.getElementById("share-photo-right").style.backgroundImage = `url('images/players/${other.id}.jpg')`;
