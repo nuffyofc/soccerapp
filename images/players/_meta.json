@@ -1,0 +1,242 @@
+[
+  {
+    "id": "messi",
+    "title": "Lionel Messi",
+    "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Leo_Messi_Argentina_v_Egypt_7_July_2026-1.jpg/1280px-Leo_Messi_Argentina_v_Egypt_7_July_2026-1.jpg",
+    "file": "Leo_Messi_Argentina_v_Egypt_7_July_2026-1.jpg",
+    "license": {
+      "license": "CC BY-SA 4.0",
+      "artist": "<a href=\"//commons.wikimedia.org/wiki/User:Berlination\" title=\"User:Berlination\">Bryan Berlin</a>",
+      "credit": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+    },
+    "status": "ok"
+  },
+  {
+    "id": "dibu",
+    "title": "Emiliano Martínez",
+    "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Emiliano_Martinez_Argentina_v_Egypt_7_July_2026-093_%28cropped%29.jpg/1280px-Emiliano_Martinez_Argentina_v_Egypt_7_July_2026-093_%28cropped%29.jpg",
+    "file": "Emiliano_Martinez_Argentina_v_Egypt_7_July_2026-093_(cropped).jpg",
+    "license": {
+      "license": "CC BY-SA 4.0",
+      "artist": "<a href=\"//commons.wikimedia.org/wiki/User:Berlination\" title=\"User:Berlination\">Bryan Berlin</a>",
+      "credit": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+    },
+    "status": "ok"
+  },
+  {
+    "id": "julian",
+    "title": "Julián Alvarez",
+    "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Julian_Alvarez_Argentina_v_Egypt_7_July_2026-056.jpg/1280px-Julian_Alvarez_Argentina_v_Egypt_7_July_2026-056.jpg",
+    "file": "Julian_Alvarez_Argentina_v_Egypt_7_July_2026-056.jpg",
+    "license": {
+      "license": "CC BY-SA 4.0",
+      "artist": "<a href=\"//commons.wikimedia.org/wiki/User:Berlination\" title=\"User:Berlination\">Bryan Berlin</a>",
+      "credit": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+    },
+    "status": "ok"
+  },
+  {
+    "id": "deniro",
+    "title": "Enzo Fernández",
+    "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Enzo_Fernandez_Argentina_v_Egypt_7_July_2026-058.jpg/1280px-Enzo_Fernandez_Argentina_v_Egypt_7_July_2026-058.jpg",
+    "file": "Enzo_Fernandez_Argentina_v_Egypt_7_July_2026-058.jpg",
+    "license": {
+      "license": "CC BY-SA 4.0",
+      "artist": "<a href=\"//commons.wikimedia.org/wiki/User:Berlination\" title=\"User:Berlination\">Bryan Berlin</a>",
+      "credit": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+    },
+    "status": "ok"
+  },
+  {
+    "id": "mbappe",
+    "title": "Kylian Mbappé",
+    "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Kylian_Mbappe_France_v_Senegal_16_June_2026-391_%28cropped%29.jpg/1280px-Kylian_Mbappe_France_v_Senegal_16_June_2026-391_%28cropped%29.jpg",
+    "file": "Kylian_Mbappe_France_v_Senegal_16_June_2026-391_(cropped).jpg",
+    "license": {
+      "license": "CC BY-SA 4.0",
+      "artist": "<a href=\"//commons.wikimedia.org/wiki/User:Berlination\" title=\"User:Berlination\">Bryan Berlin</a>",
+      "credit": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+    },
+    "status": "ok"
+  },
+  {
+    "id": "griezmann",
+    "title": "Antoine Griezmann",
+    "thumb": "https://upload.wikimedia.org/wikipedia/commons/6/6e/FRA-ARG_%2810%29_%28cropped%29.jpg",
+    "file": "FRA-ARG_(10)_(cropped).jpg",
+    "license": {
+      "license": "CC BY-SA 3.0",
+      "artist": "Антон Зайцев",
+      "credit": "<a rel=\"nofollow\" class=\"external text\" href=\"https://www.soccer.ru/galery/1056072/photo/734622\">soccer.ru</a>"
+    },
+    "status": "ok"
+  },
+  {
+    "id": "tchouameni",
+    "title": "Aurélien Tchouaméni",
+    "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Aurelien_Tchouameni_France_v_Senegal_16_June_2026-447_%28cropped%29.jpg/1280px-Aurelien_Tchouameni_France_v_Senegal_16_June_2026-447_%28cropped%29.jpg",
+    "file": "Aurelien_Tchouameni_France_v_Senegal_16_June_2026-447_(cropped).jpg",
+    "license": {
+      "license": "CC BY-SA 4.0",
+      "artist": "<a href=\"//commons.wikimedia.org/wiki/User:Berlination\" title=\"User:Berlination\">Bryan Berlin</a>",
+      "credit": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+    },
+    "status": "ok"
+  },
+  {
+    "id": "dembele",
+    "title": "Ousmane Dembélé",
+    "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Ousmane_Dembele_France_v_Senegal_16_June_2026-341_%28cropped%29.jpg/1280px-Ousmane_Dembele_France_v_Senegal_16_June_2026-341_%28cropped%29.jpg",
+    "file": "Ousmane_Dembele_France_v_Senegal_16_June_2026-341_(cropped).jpg",
+    "license": {
+      "license": "CC BY-SA 4.0",
+      "artist": "<a href=\"//commons.wikimedia.org/wiki/User:Berlination\" title=\"User:Berlination\">Bryan Berlin</a>",
+      "credit": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+    },
+    "status": "ok"
+  },
+  {
+    "id": "bellingham",
+    "title": "Jude Bellingham",
+    "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Jude_Bellingham_England_v_Panama_27_June_26-160_%28cropped%29.jpg/1280px-Jude_Bellingham_England_v_Panama_27_June_26-160_%28cropped%29.jpg",
+    "file": "Jude_Bellingham_England_v_Panama_27_June_26-160_(cropped).jpg",
+    "license": {
+      "license": "CC BY-SA 4.0",
+      "artist": "<a href=\"//commons.wikimedia.org/wiki/User:Berlination\" title=\"User:Berlination\">Bryan Berlin</a>",
+      "credit": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+    },
+    "status": "ok"
+  },
+  {
+    "id": "kane",
+    "title": "Harry Kane",
+    "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Harry_Kane_England_v_Ghana_23_June_2026-219_%28cropped%29.jpg/1280px-Harry_Kane_England_v_Ghana_23_June_2026-219_%28cropped%29.jpg",
+    "file": "Harry_Kane_England_v_Ghana_23_June_2026-219_(cropped).jpg",
+    "license": {
+      "license": "CC BY-SA 4.0",
+      "artist": "<a href=\"//commons.wikimedia.org/wiki/User:Berlination\" title=\"User:Berlination\">Bryan Berlin</a>",
+      "credit": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+    },
+    "status": "ok"
+  },
+  {
+    "id": "foden",
+    "title": "Phil Foden",
+    "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/2023-10-04_Fu%C3%9Fball%2C_M%C3%A4nner%2C_UEFA_Champions_League%2C_RB_Leipzig_-_Manchester_City_FC_1DX_2613%2C_Phil_Foden.jpg/1280px-2023-10-04_Fu%C3%9Fball%2C_M%C3%A4nner%2C_UEFA_Champions_League%2C_RB_Leipzig_-_Manchester_City_FC_1DX_2613%2C_Phil_Foden.jpg",
+    "file": "2023-10-04_Fußball,_Männer,_UEFA_Champions_League,_RB_Leipzig_-_Manchester_City_FC_1DX_2613,_Phil_Foden.jpg",
+    "license": {
+      "license": "CC BY-SA 4.0",
+      "artist": "<a href=\"//commons.wikimedia.org/wiki/User:Stepro\" title=\"User:Stepro\">Steffen Prößdorf</a>",
+      "credit": "<span class=\"int-own-work\">Self-photographed</span>"
+    },
+    "status": "ok"
+  },
+  {
+    "id": "saka",
+    "title": "Bukayo Saka",
+    "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Bukayo_Saka_England_v_Panama_27_June_26-108_%28cropped%29.jpg/1280px-Bukayo_Saka_England_v_Panama_27_June_26-108_%28cropped%29.jpg",
+    "file": "Bukayo_Saka_England_v_Panama_27_June_26-108_(cropped).jpg",
+    "license": {
+      "license": "CC BY-SA 4.0",
+      "artist": "<a href=\"//commons.wikimedia.org/wiki/User:Berlination\" title=\"User:Berlination\">Bryan Berlin</a>",
+      "credit": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+    },
+    "status": "ok"
+  },
+  {
+    "id": "vinicius",
+    "title": "Vinícius Júnior",
+    "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Vin%C3%ADcius_J%C3%BAnior_Brazil_V_Morocco_13_June_2026-207_%28cropped%29.jpg/1280px-Vin%C3%ADcius_J%C3%BAnior_Brazil_V_Morocco_13_June_2026-207_%28cropped%29.jpg",
+    "file": "Vinícius_Júnior_Brazil_V_Morocco_13_June_2026-207_(cropped).jpg",
+    "license": {
+      "license": "CC BY-SA 4.0",
+      "artist": "<a href=\"//commons.wikimedia.org/wiki/User:Berlination\" title=\"User:Berlination\">Bryan Berlin</a>",
+      "credit": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+    },
+    "status": "ok"
+  },
+  {
+    "id": "rodrygo",
+    "title": "Rodrygo",
+    "thumb": "https://upload.wikimedia.org/wikipedia/commons/0/05/Rodrygo_2023_%28cropped%29.jpg",
+    "file": "Rodrygo_2023_(cropped).jpg",
+    "license": {
+      "license": "CC BY-SA 2.0",
+      "artist": "Junta de Andalucía",
+      "credit": "<a rel=\"nofollow\" class=\"external free\" href=\"https://www.flickr.com/photos/juntainforma/52879244560/\">https://www.flickr.com/photos/juntainforma/52879244560/</a>"
+    },
+    "status": "ok"
+  },
+  {
+    "id": "raphinha",
+    "title": "Raphinha",
+    "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Raphinha_Brazil_V_Morocco_13_June_2026-133_%28cropped%29.jpg/1280px-Raphinha_Brazil_V_Morocco_13_June_2026-133_%28cropped%29.jpg",
+    "file": "Raphinha_Brazil_V_Morocco_13_June_2026-133_(cropped).jpg",
+    "license": {
+      "license": "CC BY-SA 4.0",
+      "artist": "<a href=\"//commons.wikimedia.org/wiki/User:Berlination\" title=\"User:Berlination\">Bryan Berlin</a>",
+      "credit": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+    },
+    "status": "ok"
+  },
+  {
+    "id": "casemiro",
+    "title": "Casemiro",
+    "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Casemiro_Brazil_V_Morocco_13_June_2026-76_%28cropped%29.jpg/1280px-Casemiro_Brazil_V_Morocco_13_June_2026-76_%28cropped%29.jpg",
+    "file": "Casemiro_Brazil_V_Morocco_13_June_2026-76_(cropped).jpg",
+    "license": {
+      "license": "CC BY-SA 4.0",
+      "artist": "<a href=\"//commons.wikimedia.org/wiki/User:Berlination\" title=\"User:Berlination\">Bryan Berlin</a>",
+      "credit": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+    },
+    "status": "ok"
+  },
+  {
+    "id": "ronaldo",
+    "title": "Cristiano Ronaldo",
+    "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Cristiano_Ronaldo_Croatia_v_Portugal_2_July_2026-075_%28cropped%29.jpg/1280px-Cristiano_Ronaldo_Croatia_v_Portugal_2_July_2026-075_%28cropped%29.jpg",
+    "file": "Cristiano_Ronaldo_Croatia_v_Portugal_2_July_2026-075_(cropped).jpg",
+    "license": {
+      "license": "CC BY-SA 4.0",
+      "artist": "<a href=\"//commons.wikimedia.org/wiki/User:Berlination\" title=\"User:Berlination\">Bryan Berlin</a>",
+      "credit": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+    },
+    "status": "ok"
+  },
+  {
+    "id": "bfernandes",
+    "title": "Bruno Fernandes",
+    "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Bruno_Fernandes_USMNT_v_Portugal_Mar_31_2026-27_%28cropped%29.jpg/1280px-Bruno_Fernandes_USMNT_v_Portugal_Mar_31_2026-27_%28cropped%29.jpg",
+    "file": "Bruno_Fernandes_USMNT_v_Portugal_Mar_31_2026-27_(cropped).jpg",
+    "license": {
+      "license": "CC BY-SA 4.0",
+      "artist": "<a href=\"//commons.wikimedia.org/wiki/User:Berlination\" title=\"User:Berlination\">Bryan Berlin</a>",
+      "credit": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+    },
+    "status": "ok"
+  },
+  {
+    "id": "leao",
+    "title": "Rafael Leão",
+    "thumb": "https://upload.wikimedia.org/wikipedia/commons/0/02/RafaelLe%C3%A3oPortugal23.jpg",
+    "file": "RafaelLeãoPortugal23.jpg",
+    "license": {
+      "license": "CC BY 3.0",
+      "artist": "<a rel=\"nofollow\" class=\"external text\" href=\"https://www.youtube.com/@AgenciaLUSANoticiasdePortugal\">Agência Lusa</a>",
+      "credit": "<a rel=\"nofollow\" class=\"external text\" href=\"https://www.youtube.com/watch?v=dm9HT6QQFJ0&amp;ab_channel=AgenciaLUSA:\">Rafael Leão diz que sente mais liberdade e confiança com a chegada de Martínez</a>"
+    },
+    "status": "ok"
+  },
+  {
+    "id": "cancelo",
+    "title": "João Cancelo",
+    "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Joao_Cancelo_Croatia_v_Portugal_2_July_2026-002.jpg/1280px-Joao_Cancelo_Croatia_v_Portugal_2_July_2026-002.jpg",
+    "file": "Joao_Cancelo_Croatia_v_Portugal_2_July_2026-002.jpg",
+    "license": {
+      "license": "CC BY-SA 4.0",
+      "artist": "<a href=\"//commons.wikimedia.org/wiki/User:Berlination\" title=\"User:Berlination\">Bryan Berlin</a>",
+      "credit": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+    },
+    "status": "ok"
+  }
+]

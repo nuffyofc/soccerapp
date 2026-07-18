@@ -1,0 +1,122 @@
+[
+  {
+    "id": "messi",
+    "wikipedia_article": "Lionel Messi",
+    "commons_file": "Leo_Messi_Argentina_v_Egypt_7_July_2026-1.jpg",
+    "license": "CC BY-SA 4.0"
+  },
+  {
+    "id": "dibu",
+    "wikipedia_article": "Emiliano Martínez",
+    "commons_file": "Emiliano_Martinez_Argentina_v_Egypt_7_July_2026-093_(cropped).jpg",
+    "license": "CC BY-SA 4.0"
+  },
+  {
+    "id": "julian",
+    "wikipedia_article": "Julián Alvarez",
+    "commons_file": "Julian_Alvarez_Argentina_v_Egypt_7_July_2026-056.jpg",
+    "license": "CC BY-SA 4.0"
+  },
+  {
+    "id": "deniro",
+    "wikipedia_article": "Enzo Fernández",
+    "commons_file": "Enzo_Fernandez_Argentina_v_Egypt_7_July_2026-058.jpg",
+    "license": "CC BY-SA 4.0"
+  },
+  {
+    "id": "mbappe",
+    "wikipedia_article": "Kylian Mbappé",
+    "commons_file": "Kylian_Mbappe_France_v_Senegal_16_June_2026-391_(cropped).jpg",
+    "license": "CC BY-SA 4.0"
+  },
+  {
+    "id": "griezmann",
+    "wikipedia_article": "Antoine Griezmann",
+    "commons_file": "FRA-ARG_(10)_(cropped).jpg",
+    "license": "CC BY-SA 3.0"
+  },
+  {
+    "id": "tchouameni",
+    "wikipedia_article": "Aurélien Tchouaméni",
+    "commons_file": "Aurelien_Tchouameni_France_v_Senegal_16_June_2026-447_(cropped).jpg",
+    "license": "CC BY-SA 4.0"
+  },
+  {
+    "id": "dembele",
+    "wikipedia_article": "Ousmane Dembélé",
+    "commons_file": "Ousmane_Dembele_France_v_Senegal_16_June_2026-341_(cropped).jpg",
+    "license": "CC BY-SA 4.0"
+  },
+  {
+    "id": "bellingham",
+    "wikipedia_article": "Jude Bellingham",
+    "commons_file": "Jude_Bellingham_England_v_Panama_27_June_26-160_(cropped).jpg",
+    "license": "CC BY-SA 4.0"
+  },
+  {
+    "id": "kane",
+    "wikipedia_article": "Harry Kane",
+    "commons_file": "Harry_Kane_England_v_Ghana_23_June_2026-219_(cropped).jpg",
+    "license": "CC BY-SA 4.0"
+  },
+  {
+    "id": "foden",
+    "wikipedia_article": "Phil Foden",
+    "commons_file": "2023-10-04_Fußball,_Männer,_UEFA_Champions_League,_RB_Leipzig_-_Manchester_City_FC_1DX_2613,_Phil_Foden.jpg",
+    "license": "CC BY-SA 4.0"
+  },
+  {
+    "id": "saka",
+    "wikipedia_article": "Bukayo Saka",
+    "commons_file": "Bukayo_Saka_England_v_Panama_27_June_26-108_(cropped).jpg",
+    "license": "CC BY-SA 4.0"
+  },
+  {
+    "id": "vinicius",
+    "wikipedia_article": "Vinícius Júnior",
+    "commons_file": "Vinícius_Júnior_Brazil_V_Morocco_13_June_2026-207_(cropped).jpg",
+    "license": "CC BY-SA 4.0"
+  },
+  {
+    "id": "rodrygo",
+    "wikipedia_article": "Rodrygo",
+    "commons_file": "Rodrygo_2023_(cropped).jpg",
+    "license": "CC BY-SA 2.0"
+  },
+  {
+    "id": "raphinha",
+    "wikipedia_article": "Raphinha",
+    "commons_file": "Raphinha_Brazil_V_Morocco_13_June_2026-133_(cropped).jpg",
+    "license": "CC BY-SA 4.0"
+  },
+  {
+    "id": "casemiro",
+    "wikipedia_article": "Casemiro",
+    "commons_file": "Casemiro_Brazil_V_Morocco_13_June_2026-76_(cropped).jpg",
+    "license": "CC BY-SA 4.0"
+  },
+  {
+    "id": "ronaldo",
+    "wikipedia_article": "Cristiano Ronaldo",
+    "commons_file": "Cristiano_Ronaldo_Croatia_v_Portugal_2_July_2026-075_(cropped).jpg",
+    "license": "CC BY-SA 4.0"
+  },
+  {
+    "id": "bfernandes",
+    "wikipedia_article": "Bruno Fernandes",
+    "commons_file": "Bruno_Fernandes_USMNT_v_Portugal_Mar_31_2026-27_(cropped).jpg",
+    "license": "CC BY-SA 4.0"
+  },
+  {
+    "id": "leao",
+    "wikipedia_article": "Rafael Leão",
+    "commons_file": "RafaelLeãoPortugal23.jpg",
+    "license": "CC BY 3.0"
+  },
+  {
+    "id": "cancelo",
+    "wikipedia_article": "João Cancelo",
+    "commons_file": "Joao_Cancelo_Croatia_v_Portugal_2_July_2026-002.jpg",
+    "license": "CC BY-SA 4.0"
+  }
+]

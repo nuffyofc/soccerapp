@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>Who's Better? — All Sports MVP Demo</title>
+<style>
+  :root{
+    --bg:#0b0b0f;
+    --bg-elev:#151318;
+    --card:#1c1a22;
+    --text:#f5f5f7;
+    --text-dim:#8a8a93;
+    --accent:#ff2e92;
+    --accent2:#00e5ff;
+    --accent-glow: rgba(255,46,146,0.45);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    overflow:hidden;
+  }
+  #app{
+    max-width:460px;
+    margin:0 auto;
+    height:100vh;
+    height:100dvh;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    background:
+      radial-gradient(circle at 20% 0%, rgba(255,46,146,0.12), transparent 40%),
+      radial-gradient(circle at 85% 15%, rgba(0,229,255,0.10), transparent 35%),
+      var(--bg);
+  }
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 18px 10px;
+  }
+  .brand{
+    font-weight:900;
+    font-size:19px;
+    letter-spacing:-0.5px;
+  }
+  .brand span{color:var(--accent);}
+  .round-pill{
+    font-size:12px;
+    font-weight:700;
+    color:var(--text-dim);
+    background:var(--bg-elev);
+    border:1px solid #2a2732;
+    padding:6px 12px;
+    border-radius:999px;
+  }
+  .topbar-left{display:flex;align-items:center;gap:12px;}
+  .burger-btn{
+    width:38px;height:38px;
+    border-radius:11px;
+    background:var(--bg-elev);
+    border:1px solid #2a2732;
+    display:flex;align-items:center;justify-content:center;
+    flex-direction:column;gap:4px;
+    cursor:pointer;
+    flex-shrink:0;
+  }
+  .burger-btn span{width:16px;height:2px;background:var(--text);border-radius:2px;}
+
+  /* ---------- Category menu overlay ---------- */
+  .menu-overlay{
+    position:absolute;inset:0;
+    background:rgba(6,6,9,0.72);
+    backdrop-filter:blur(4px);
+    z-index:50;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+  .menu-overlay.open{display:flex;}
+  .menu-panel{
+    width:100%;
+    max-width:360px;
+    background:var(--bg-elev);
+    border:1px solid #2a2732;
+    border-radius:24px;
+    padding:20px;
+    box-shadow:0 24px 70px rgba(0,0,0,0.55);
+  }
+  .menu-title{font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim);margin-bottom:14px;text-align:center;}
+  .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .cat-card{
+    border-radius:16px;
+    padding:16px 12px;
+    text-align:center;
+    cursor:pointer;
+    border:1px solid #2a2732;
+    background:var(--card);
+    transition:transform .12s ease, border-color .2s ease;
+  }
+  .cat-card:active{transform:scale(0.96);}
+  .cat-card.active{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent), 0 0 20px var(--accent-glow);}
+  .cat-icon{font-size:26px;margin-bottom:6px;}
+  .cat-label{font-size:12.5px;font-weight:800;}
+  .cat-sub{font-size:10px;color:var(--text-dim);font-weight:700;margin-top:2px;}
+  .menu-close{
+    margin-top:16px;width:100%;padding:12px;border-radius:12px;border:none;
+    background:transparent;color:var(--text-dim);font-weight:800;font-size:13px;cursor:pointer;
+  }
+
+  /* ---------- Screens ---------- */
+  .screen{
+    flex:1;
+    display:none;
+    flex-direction:column;
+    min-height:0;
+  }
+  .screen.active{display:flex;}
+
+  /* ---------- Play screen ---------- */
+  .prompt{
+    text-align:center;
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    color:var(--text-dim);
+    font-weight:700;
+    margin:4px 0 14px;
+  }
+  .prompt b{color:var(--text);}
+
+  .matchup{
+    flex:1;
+    display:flex;
+    gap:12px;
+    padding:0 16px;
+    min-height:0;
+  }
+  .pcard{
+    flex:1;
+    position:relative;
+    border-radius:22px;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    align-items:center;
+    padding:22px 14px;
+    cursor:pointer;
+    border:1px solid rgba(255,255,255,0.06);
+    transition:transform .12s ease, box-shadow .2s ease, filter .3s ease;
+    overflow:hidden;
+    isolation:isolate;
+  }
+  .pcard::before{
+    content:"";
+    position:absolute;inset:0;
+    background:var(--grad);
+    opacity:0.85;
+    z-index:-1;
+  }
+  .pcard::after{
+    content:"";
+    position:absolute;inset:0;
+    background:linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.05) 55%);
+    z-index:-1;
+  }
+  .pcard:active{transform:scale(0.97);}
+  .pcard.win{
+    box-shadow:0 0 0 3px var(--accent), 0 0 30px var(--accent-glow);
+    animation:pulse .5s ease;
+  }
+  .pcard.lose{filter:grayscale(0.6) brightness(0.55);transform:scale(0.96);}
+  .pcard.locked{pointer-events:none;}
+  @keyframes pulse{
+    0%{transform:scale(1);}
+    40%{transform:scale(1.04);}
+    100%{transform:scale(1);}
+  }
+
+  .flag{font-size:30px;margin-bottom:8px;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.4));}
+  .initials{
+    font-size:44px;font-weight:900;letter-spacing:-1px;
+    text-shadow:0 4px 18px rgba(0,0,0,0.5);
+  }
+  .pname{font-size:16px;font-weight:800;margin-top:10px;text-align:center;line-height:1.15;}
+  .pcountry{font-size:11px;color:rgba(255,255,255,0.75);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+
+  .vs-badge{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    background:var(--bg);
+    border:2px solid var(--accent);
+    color:var(--accent);
+    font-weight:900;
+    font-size:12px;
+    width:34px;height:34px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    z-index:5;
+    box-shadow:0 0 16px var(--accent-glow);
+  }
+
+  .result-wrap{
+    padding:16px;
+    min-height:70px;
+  }
+  .bar-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:8px;
+    font-size:13px;
+    font-weight:700;
+    opacity:0;
+    transform:translateY(6px);
+    transition:opacity .3s ease, transform .3s ease;
+  }
+  .bar-row.show{opacity:1;transform:translateY(0);}
+  .bar-track{
+    flex:1;
+    height:10px;
+    background:var(--bg-elev);
+    border-radius:999px;
+    overflow:hidden;
+    border:1px solid #2a2732;
+  }
+  .bar-fill{
+    height:100%;
+    width:0%;
+    border-radius:999px;
+    transition:width .7s cubic-bezier(.2,.9,.25,1);
+  }
+  .bar-fill.a{background:linear-gradient(90deg,var(--accent),#ff7ab8);}
+  .bar-fill.b{background:linear-gradient(90deg,var(--accent2),#7afff0);}
+  .bar-pct{width:44px;text-align:right;font-variant-numeric:tabular-nums;}
+  .bar-name{width:78px;font-size:11px;color:var(--text-dim);font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .total-votes{
+    text-align:center;font-size:11px;color:var(--text-dim);margin-top:4px;
+  }
+
+  /* ---------- Share screen ---------- */
+  #share-screen{align-items:center;justify-content:center;padding:22px;}
+  .share-card{
+    width:100%;
+    max-width:320px;
+    aspect-ratio:9/14;
+    border-radius:28px;
+    background:
+      radial-gradient(circle at 30% 10%, rgba(255,46,146,0.35), transparent 55%),
+      radial-gradient(circle at 80% 90%, rgba(0,229,255,0.28), transparent 50%),
+      var(--bg-elev);
+    border:1px solid rgba(255,255,255,0.08);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;
+    padding:26px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.5);
+  }
+  .share-eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);font-weight:800;}
+  .share-stat{
+    font-size:56px;font-weight:900;line-height:1;margin:14px 0 6px;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .share-line{font-size:15px;font-weight:700;max-width:230px;line-height:1.4;}
+  .share-line b{color:var(--accent2);}
+  .share-players{
+    display:flex;gap:10px;margin-top:22px;
+  }
+  .share-players .mini{
+    width:64px;height:64px;border-radius:16px;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:900;font-size:20px;
+  }
+  .share-brand{margin-top:24px;font-size:12px;color:var(--text-dim);font-weight:800;letter-spacing:.5px;}
+  .share-brand span.sb{color:var(--accent);}
+
+  .share-actions{display:flex;gap:10px;margin-top:22px;width:100%;max-width:320px;}
+  .btn{
+    flex:1;
+    padding:14px;
+    border-radius:14px;
+    border:none;
+    font-weight:800;
+    font-size:14px;
+    cursor:pointer;
+  }
+  .btn-primary{background:linear-gradient(90deg,var(--accent),#ff5ba8);color:#fff;}
+  .btn-ghost{background:var(--bg-elev);color:var(--text);border:1px solid #2a2732;}
+
+  /* ---------- Hot Debates screen ---------- */
+  #debates-screen{padding:16px;overflow-y:auto;}
+  .debates-title{font-size:20px;font-weight:900;margin:6px 0 2px;}
+  .debates-sub{font-size:12px;color:var(--text-dim);margin-bottom:14px;}
+  .debate-row{
+    display:flex;align-items:center;gap:12px;
+    background:var(--card);
+    border:1px solid rgba(255,255,255,0.06);
+    border-radius:16px;
+    padding:12px;
+    margin-bottom:10px;
+    cursor:pointer;
+  }
+  .debate-rank{
+    font-weight:900;color:var(--text-dim);font-size:13px;width:18px;
+  }
+  .debate-mini{
+    width:38px;height:38px;border-radius:10px;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:900;font-size:13px;flex-shrink:0;
+  }
+  .debate-mid{flex:1;min-width:0;}
+  .debate-names{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .debate-split{font-size:11px;color:var(--accent2);font-weight:800;margin-top:2px;}
+  .fire{font-size:16px;}
+
+  /* ---------- Bottom nav ---------- */
+  .bottomnav{
+    display:flex;
+    border-top:1px solid #211f28;
+    background:rgba(11,11,15,0.9);
+    backdrop-filter:blur(10px);
+  }
+  .navbtn{
+    flex:1;
+    text-align:center;
+    padding:12px 0 14px;
+    color:var(--text-dim);
+    font-size:11px;
+    font-weight:800;
+    cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;gap:4px;
+  }
+  .navbtn .ic{font-size:20px;}
+  .navbtn.active{color:var(--text);}
+  .navbtn.active .ic{filter:drop-shadow(0 0 8px var(--accent-glow));}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="burger-btn" id="burger-btn"><span></span><span></span><span></span></div>
+      <div class="brand">WHO'S <span>BETTER?</span></div>
+    </div>
+    <div class="round-pill" id="round-pill">Round 1 / 10</div>
+  </div>
+
+  <!-- CATEGORY MENU -->
+  <div class="menu-overlay" id="menu-overlay">
+    <div class="menu-panel">
+      <div class="menu-title">Choose a Category</div>
+      <div class="cat-grid" id="cat-grid"></div>
+      <button class="menu-close" id="menu-close">Close</button>
+    </div>
+  </div>
+
+  <!-- PLAY SCREEN -->
+  <div class="screen active" id="play-screen">
+    <div class="prompt" id="prompt-text">Who would you rather have on your team?</div>
+    <div class="matchup" id="matchup">
+      <div class="pcard" id="card-a"></div>
+      <div class="vs-badge">VS</div>
+      <div class="pcard" id="card-b"></div>
+    </div>
+    <div class="result-wrap" id="result-wrap">
+      <div class="bar-row" id="row-a">
+        <div class="bar-name" id="name-a"></div>
+        <div class="bar-track"><div class="bar-fill a" id="fill-a"></div></div>
+        <div class="bar-pct" id="pct-a">0%</div>
+      </div>
+      <div class="bar-row" id="row-b">
+        <div class="bar-name" id="name-b"></div>
+        <div class="bar-track"><div class="bar-fill b" id="fill-b"></div></div>
+        <div class="bar-pct" id="pct-b">0%</div>
+      </div>
+      <div class="total-votes" id="total-votes"></div>
+    </div>
+  </div>
+
+  <!-- SHARE SCREEN -->
+  <div class="screen" id="share-screen">
+    <div class="share-card">
+      <div class="share-eyebrow">Session Complete</div>
+      <div class="share-stat" id="share-stat">6%</div>
+      <div class="share-line" id="share-line">You're in the minority who picked <b>Player</b> over Player.</div>
+      <div class="share-players" id="share-players"></div>
+      <div class="share-brand">WHO'S <span class="sb">BETTER?</span> · <span id="share-edition">World Cup Edition</span></div>
+    </div>
+    <div class="share-actions">
+      <button class="btn btn-ghost" id="btn-again">Play Again</button>
+      <button class="btn btn-primary" id="btn-share">Share ↗</button>
+    </div>
+  </div>
+
+  <!-- HOT DEBATES SCREEN -->
+  <div class="screen" id="debates-screen">
+    <div class="debates-title">🔥 Hot Debates</div>
+    <div class="debates-sub">Today's closest 50/50 splits — tap to weigh in</div>
+    <div id="debates-list"></div>
+  </div>
+
+  <div class="bottomnav">
+    <div class="navbtn active" data-screen="play-screen"><div class="ic">⚡</div>PLAY</div>
+    <div class="navbtn" data-screen="debates-screen"><div class="ic">🔥</div>HOT DEBATES</div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  // ---------- Data: one dataset per category, same shape, same voting engine ----------
+  const CATEGORIES = {
+    soccer: {
+      label:"Soccer", icon:"⚽", edition:"World Cup Edition",
+      prompt:"Who would you rather have on your team?",
+      players:[
+        {id:"messi", name:"L. Messi", sub:"Argentina", emoji:"🇦🇷", initials:"LM", grad:"linear-gradient(160deg,#5b9bd5,#ffffff20)"},
+        {id:"dibu", name:"E. Martínez", sub:"Argentina", emoji:"🇦🇷", initials:"EM", grad:"linear-gradient(160deg,#75c1e8,#1c3a5e)"},
+        {id:"julian", name:"J. Álvarez", sub:"Argentina", emoji:"🇦🇷", initials:"JA", grad:"linear-gradient(160deg,#a5d8ff,#1c3a5e)"},
+        {id:"deniro", name:"E. Fernández", sub:"Argentina", emoji:"🇦🇷", initials:"EF", grad:"linear-gradient(160deg,#6ea8d8,#22436b)"},
+        {id:"mbappe", name:"K. Mbappé", sub:"France", emoji:"🇫🇷", initials:"KM", grad:"linear-gradient(160deg,#274b9e,#e63946)"},
+        {id:"griezmann", name:"A. Griezmann", sub:"France", emoji:"🇫🇷", initials:"AG", grad:"linear-gradient(160deg,#3457a6,#c1121f)"},
+        {id:"tchouameni", name:"A. Tchouaméni", sub:"France", emoji:"🇫🇷", initials:"AT", grad:"linear-gradient(160deg,#1d3a8f,#d62839)"},
+        {id:"dembele", name:"O. Dembélé", sub:"France", emoji:"🇫🇷", initials:"OD", grad:"linear-gradient(160deg,#2a4d9e,#e5383b)"},
+        {id:"bellingham", name:"J. Bellingham", sub:"England", emoji:"🏴", initials:"JB", grad:"linear-gradient(160deg,#d64550,#ffffff20)"},
+        {id:"kane", name:"H. Kane", sub:"England", emoji:"🏴", initials:"HK", grad:"linear-gradient(160deg,#c9414d,#3a1d21)"},
+        {id:"foden", name:"P. Foden", sub:"England", emoji:"🏴", initials:"PF", grad:"linear-gradient(160deg,#e05d67,#421f24)"},
+        {id:"saka", name:"B. Saka", sub:"England", emoji:"🏴", initials:"BS", grad:"linear-gradient(160deg,#d1414c,#2c161a)"},
+        {id:"vinicius", name:"Vinícius Jr.", sub:"Brazil", emoji:"🇧🇷", initials:"VJ", grad:"linear-gradient(160deg,#ffcc29,#0a7d3a)"},
+        {id:"rodrygo", name:"Rodrygo", sub:"Brazil", emoji:"🇧🇷", initials:"RG", grad:"linear-gradient(160deg,#f4d35e,#0d6e34)"},
+        {id:"raphinha", name:"Raphinha", sub:"Brazil", emoji:"🇧🇷", initials:"RP", grad:"linear-gradient(160deg,#f2c744,#0b5e2d)"},
+        {id:"casemiro", name:"Casemiro", sub:"Brazil", emoji:"🇧🇷", initials:"CS", grad:"linear-gradient(160deg,#e8b93b,#0a4d26)"},
+        {id:"ronaldo", name:"C. Ronaldo", sub:"Portugal", emoji:"🇵🇹", initials:"CR", grad:"linear-gradient(160deg,#c8102e,#046a38)"},
+        {id:"bfernandes", name:"B. Fernandes", sub:"Portugal", emoji:"🇵🇹", initials:"BF", grad:"linear-gradient(160deg,#b91c34,#0a5c32)"},
+        {id:"leao", name:"R. Leão", sub:"Portugal", emoji:"🇵🇹", initials:"RL", grad:"linear-gradient(160deg,#c8102e,#0a4d2b)"},
+        {id:"cancelo", name:"J. Cancelo", sub:"Portugal", emoji:"🇵🇹", initials:"JC", grad:"linear-gradient(160deg,#af1830,#083f24)"},
+      ],
+      rivalries:[["messi","ronaldo"],["mbappe","bellingham"],["vinicius","mbappe"],["ronaldo","kane"],["messi","mbappe"],["bellingham","ronaldo"]]
+    },
+    basketball: {
+      label:"Basketball", icon:"🏀", edition:"NBA Edition",
+      prompt:"Who would you rather have on your roster?",
+      players:[
+        {id:"lebron", name:"LeBron James", sub:"Lakers", emoji:"🏀", initials:"LJ", grad:"linear-gradient(160deg,#552583,#fdb927)"},
+        {id:"curry", name:"S. Curry", sub:"Warriors", emoji:"🏀", initials:"SC", grad:"linear-gradient(160deg,#1d428a,#ffc72c)"},
+        {id:"durant", name:"K. Durant", sub:"Suns", emoji:"🏀", initials:"KD", grad:"linear-gradient(160deg,#1d1160,#e56020)"},
+        {id:"giannis", name:"Giannis A.", sub:"Bucks", emoji:"🏀", initials:"GA", grad:"linear-gradient(160deg,#00471b,#eee1c6)"},
+        {id:"luka", name:"L. Dončić", sub:"Lakers", emoji:"🏀", initials:"LD", grad:"linear-gradient(160deg,#552583,#f9a01b)"},
+        {id:"jokic", name:"N. Jokić", sub:"Nuggets", emoji:"🏀", initials:"NJ", grad:"linear-gradient(160deg,#0e2240,#fec524)"},
+        {id:"tatum", name:"J. Tatum", sub:"Celtics", emoji:"🏀", initials:"JT", grad:"linear-gradient(160deg,#007a33,#ffffff30)"},
+        {id:"sga", name:"SG-Alexander", sub:"Thunder", emoji:"🏀", initials:"SG", grad:"linear-gradient(160deg,#007ac1,#ef3b24)"},
+        {id:"edwards", name:"A. Edwards", sub:"Timberwolves", emoji:"🏀", initials:"AE", grad:"linear-gradient(160deg,#0c2340,#78be20)"},
+        {id:"wemby", name:"V. Wembanyama", sub:"Spurs", emoji:"🏀", initials:"VW", grad:"linear-gradient(160deg,#000000,#c4ced4)"},
+        {id:"booker", name:"D. Booker", sub:"Suns", emoji:"🏀", initials:"DB", grad:"linear-gradient(160deg,#e56020,#1d1160)"},
+        {id:"embiid", name:"J. Embiid", sub:"76ers", emoji:"🏀", initials:"JE", grad:"linear-gradient(160deg,#006bb6,#ed174c)"},
+      ],
+      rivalries:[["lebron","curry"],["luka","jokic"],["giannis","tatum"],["sga","wemby"],["curry","durant"],["lebron","durant"]]
+    },
+    esports: {
+      label:"Esports", icon:"🎮", edition:"CS2 Edition",
+      prompt:"Who's the better fragger?",
+      players:[
+        {id:"s1mple", name:"s1mple", sub:"NAVI", emoji:"🎯", initials:"S1", grad:"linear-gradient(160deg,#111827,#39ff88)"},
+        {id:"zywoo", name:"ZywOo", sub:"Vitality", emoji:"🎯", initials:"ZW", grad:"linear-gradient(160deg,#1a1a2e,#ffcc00)"},
+        {id:"niko", name:"NiKo", sub:"G2", emoji:"🎯", initials:"NK", grad:"linear-gradient(160deg,#141414,#e0004d)"},
+        {id:"donk", name:"donk", sub:"Spirit", emoji:"🎯", initials:"DK", grad:"linear-gradient(160deg,#12151c,#00c2ff)"},
+        {id:"m0nesy", name:"m0NESY", sub:"G2", emoji:"🎯", initials:"M0", grad:"linear-gradient(160deg,#101010,#ff005c)"},
+        {id:"sh1ro", name:"sh1ro", sub:"Spirit", emoji:"🎯", initials:"SH", grad:"linear-gradient(160deg,#0e0e12,#3ddc97)"},
+        {id:"ropz", name:"ropz", sub:"Vitality", emoji:"🎯", initials:"RP", grad:"linear-gradient(160deg,#181818,#ffd23f)"},
+        {id:"axile", name:"Ax1Le", sub:"Spirit", emoji:"🎯", initials:"AX", grad:"linear-gradient(160deg,#101418,#2ec4b6)"},
+        {id:"broky", name:"broky", sub:"FaZe", emoji:"🎯", initials:"BR", grad:"linear-gradient(160deg,#0b0b0b,#ff4d4d)"},
+        {id:"hunter", name:"huNter-", sub:"FaZe", emoji:"🎯", initials:"HN", grad:"linear-gradient(160deg,#111,#ff9f1c)"},
+        {id:"twistzz", name:"Twistzz", sub:"FaZe", emoji:"🎯", initials:"TW", grad:"linear-gradient(160deg,#0d0d0d,#5390d9)"},
+        {id:"jame", name:"Jame", sub:"Falcons", emoji:"🎯", initials:"JM", grad:"linear-gradient(160deg,#121212,#8ac926)"},
+      ],
+      rivalries:[["s1mple","zywoo"],["niko","donk"],["m0nesy","zywoo"],["sh1ro","axile"],["ropz","broky"],["hunter","twistzz"]]
+    },
+    movies: {
+      label:"Movies", icon:"🎬", edition:"Actors Edition",
+      prompt:"Who's the better actor?",
+      players:[
+        {id:"cruise", name:"Tom Cruise", sub:"Action", emoji:"🎬", initials:"TC", grad:"linear-gradient(160deg,#3a1c71,#d76d77)"},
+        {id:"leo", name:"L. DiCaprio", sub:"Drama", emoji:"🎬", initials:"LD", grad:"linear-gradient(160deg,#0f2027,#2c5364)"},
+        {id:"rock", name:"D. Johnson", sub:"Action", emoji:"🎬", initials:"DJ", grad:"linear-gradient(160deg,#232526,#414345)"},
+        {id:"timmy", name:"T. Chalamet", sub:"Drama", emoji:"🎬", initials:"TC2", grad:"linear-gradient(160deg,#654ea3,#eaafc8)"},
+        {id:"margot", name:"Margot Robbie", sub:"Comedy", emoji:"🎬", initials:"MR", grad:"linear-gradient(160deg,#ee9ca7,#ffdde1)"},
+        {id:"zendaya", name:"Zendaya", sub:"Drama", emoji:"🎬", initials:"ZD", grad:"linear-gradient(160deg,#360033,#0b8793)"},
+        {id:"gosling", name:"Ryan Gosling", sub:"Drama", emoji:"🎬", initials:"RG", grad:"linear-gradient(160deg,#485563,#29323c)"},
+        {id:"holland", name:"Tom Holland", sub:"Action", emoji:"🎬", initials:"TH", grad:"linear-gradient(160deg,#e52d27,#b31217)"},
+        {id:"rdj", name:"R. Downey Jr.", sub:"Action", emoji:"🎬", initials:"RD", grad:"linear-gradient(160deg,#b79891,#94716b)"},
+        {id:"scarjo", name:"S. Johansson", sub:"Action", emoji:"🎬", initials:"SJ", grad:"linear-gradient(160deg,#f7971e,#ffd200)"},
+        {id:"denzel", name:"Denzel Washington", sub:"Drama", emoji:"🎬", initials:"DW", grad:"linear-gradient(160deg,#232526,#5c5c5c)"},
+        {id:"pugh", name:"Florence Pugh", sub:"Drama", emoji:"🎬", initials:"FP", grad:"linear-gradient(160deg,#6a3093,#a044ff)"},
+      ],
+      rivalries:[["cruise","rock"],["leo","gosling"],["timmy","holland"],["margot","zendaya"],["rdj","denzel"],["scarjo","pugh"]]
+    }
+  };
+
+  let categoryKey = "soccer";
+  let PLAYERS, RIVALRY_PAIRS, byId;
+
+  function loadCategoryData(){
+    const cat = CATEGORIES[categoryKey];
+    PLAYERS = cat.players;
+    RIVALRY_PAIRS = cat.rivalries;
+    byId = Object.fromEntries(PLAYERS.map(p=>[p.id,p]));
+    document.getElementById("prompt-text").textContent = cat.prompt;
+    document.getElementById("share-edition").textContent = cat.edition;
+  }
+
+  // ---------- Fake persisted "crowd" vote store (namespaced per category) ----------
+  function storeKey(){ return "wb_votes_v1_"+categoryKey; }
+  function loadVotes(){
+    try{ return JSON.parse(localStorage.getItem(storeKey())) || {}; }catch(e){ return {}; }
+  }
+  function saveVotes(v){ localStorage.setItem(storeKey(), JSON.stringify(v)); }
+  function pairKey(a,b){ return [a,b].sort().join("__"); }
+
+  let votes = {};
+
+  function seedIfEmpty(){
+    if(Object.keys(votes).length) return;
+    // seed rivalry pairs near 50/50, and a handful of random pairs, so Hot Debates + % feel alive on first load
+    RIVALRY_PAIRS.forEach(([a,b])=>{
+      const k = pairKey(a,b);
+      const skew = 0.42 + Math.random()*0.16; // 42-58%
+      const total = 180 + Math.floor(Math.random()*400);
+      const av = Math.round(total*skew);
+      votes[k] = {[a]: av, [b]: total-av};
+    });
+    for(let i=0;i<10;i++){
+      const a = PLAYERS[Math.floor(Math.random()*PLAYERS.length)];
+      const b = PLAYERS[Math.floor(Math.random()*PLAYERS.length)];
+      if(a.id===b.id) continue;
+      const k = pairKey(a.id,b.id);
+      if(votes[k]) continue;
+      const skew = Math.random();
+      const total = 20 + Math.floor(Math.random()*150);
+      const av = Math.round(total*skew);
+      votes[k] = {[a.id]: av, [b.id]: total-av};
+    }
+    saveVotes(votes);
+  }
+
+  function recordVote(aId,bId,winnerId){
+    const k = pairKey(aId,bId);
+    if(!votes[k]) votes[k] = {[aId]:0,[bId]:0};
+    if(votes[k][aId]===undefined) votes[k][aId]=0;
+    if(votes[k][bId]===undefined) votes[k][bId]=0;
+    votes[k][winnerId] += 1;
+    saveVotes(votes);
+    return votes[k];
+  }
+
+  // ---------- Session / pairing ----------
+  const TOTAL_ROUNDS = 10;
+  let round = 0;
+  let usedPairs = new Set();
+  let current = null; // {a,b}
+  let locked = false;
+  let sessionResults = [];
+  let forcedPair = null;
+
+  function weightedPickPair(){
+    if(forcedPair){
+      const fp = forcedPair;
+      forcedPair = null;
+      return fp;
+    }
+    // 55% chance: an unused rivalry pair
+    const availableRivalry = RIVALRY_PAIRS.filter(([a,b])=>!usedPairs.has(pairKey(a,b)));
+    if(availableRivalry.length && Math.random() < 0.55){
+      const [a,b] = availableRivalry[Math.floor(Math.random()*availableRivalry.length)];
+      return {a:byId[a], b:byId[b]};
+    }
+    // otherwise random pair not yet used this session
+    let tries = 0;
+    while(tries < 50){
+      const a = PLAYERS[Math.floor(Math.random()*PLAYERS.length)];
+      const b = PLAYERS[Math.floor(Math.random()*PLAYERS.length)];
+      if(a.id!==b.id && !usedPairs.has(pairKey(a.id,b.id))){
+        return {a,b};
+      }
+      tries++;
+    }
+    return {a:PLAYERS[0], b:PLAYERS[1]};
+  }
+
+  function renderCard(el, p){
+    el.style.setProperty("--grad", p.grad);
+    el.innerHTML = `
+      <div class="flag">${p.emoji}</div>
+      <div class="initials">${p.initials}</div>
+      <div class="pname">${p.name}</div>
+      <div class="pcountry">${p.sub}</div>
+    `;
+  }
+
+  const cardA = document.getElementById("card-a");
+  const cardB = document.getElementById("card-b");
+  const roundPill = document.getElementById("round-pill");
+  const rowA = document.getElementById("row-a");
+  const rowB = document.getElementById("row-b");
+  const fillA = document.getElementById("fill-a");
+  const fillB = document.getElementById("fill-b");
+  const pctA = document.getElementById("pct-a");
+  const pctB = document.getElementById("pct-b");
+  const nameA = document.getElementById("name-a");
+  const nameB = document.getElementById("name-b");
+  const totalVotesEl = document.getElementById("total-votes");
+
+  function resetResultUI(){
+    [rowA,rowB].forEach(r=>r.classList.remove("show"));
+    fillA.style.width="0%"; fillB.style.width="0%";
+    pctA.textContent="0%"; pctB.textContent="0%";
+    totalVotesEl.textContent="";
+    cardA.classList.remove("win","lose","locked");
+    cardB.classList.remove("win","lose","locked");
+  }
+
+  function nextRound(){
+    if(round >= TOTAL_ROUNDS){
+      showShareScreen();
+      return;
+    }
+    round++;
+    locked = false;
+    roundPill.textContent = `Round ${round} / ${TOTAL_ROUNDS}`;
+    resetResultUI();
+    const {a,b} = weightedPickPair();
+    current = {a,b};
+    usedPairs.add(pairKey(a.id,b.id));
+    renderCard(cardA, a);
+    renderCard(cardB, b);
+  }
+
+  function handlePick(winnerKey){
+    if(locked || !current) return;
+    locked = true;
+    const {a,b} = current;
+    const winnerId = winnerKey==="a" ? a.id : b.id;
+    const result = recordVote(a.id, b.id, winnerId);
+    const total = result[a.id] + result[b.id];
+    const pa = Math.round((result[a.id]/total)*100);
+    const pb = 100 - pa;
+
+    cardA.classList.add(winnerKey==="a" ? "win":"lose", "locked");
+    cardB.classList.add(winnerKey==="b" ? "win":"lose", "locked");
+
+    nameA.textContent = a.name;
+    nameB.textContent = b.name;
+    totalVotesEl.textContent = `${total.toLocaleString()} players decided`;
+
+    requestAnimationFrame(()=>{
+      rowA.classList.add("show");
+      rowB.classList.add("show");
+      requestAnimationFrame(()=>{
+        fillA.style.width = pa+"%";
+        fillB.style.width = pb+"%";
+        animateCount(pctA, pa);
+        animateCount(pctB, pb);
+      });
+    });
+
+    sessionResults.push({a,b,winnerId,pa,pb, splitDistance: Math.abs(50-Math.max(pa,pb))});
+
+    setTimeout(nextRound, 1500);
+  }
+
+  function animateCount(el, target){
+    let val = 0;
+    const step = Math.max(1, Math.round(target/12));
+    const id = setInterval(()=>{
+      val += step;
+      if(val>=target){ val = target; clearInterval(id); }
+      el.textContent = val+"%";
+    }, 25);
+  }
+
+  cardA.addEventListener("click", ()=>handlePick("a"));
+  cardB.addEventListener("click", ()=>handlePick("b"));
+
+  // ---------- Share screen ----------
+  const shareScreen = document.getElementById("share-screen");
+  const playScreen = document.getElementById("play-screen");
+  const debatesScreen = document.getElementById("debates-screen");
+
+  function showShareScreen(){
+    // feature the closest-split (most "you're in the minority") result from this session
+    let best = sessionResults[0];
+    sessionResults.forEach(r=>{ if(r.splitDistance < best.splitDistance) best = r; });
+    if(!best){ best = {a:PLAYERS[0], b:PLAYERS[1], winnerId:PLAYERS[0].id, pa:50, pb:50}; }
+
+    const winner = byId[best.winnerId];
+    const other = winner.id===best.a.id ? best.b : best.a;
+    const winnerPct = winner.id===best.a.id ? best.pa : best.pb;
+    const minorityPct = 100-winnerPct;
+    const isMinority = winnerPct > 50;
+
+    document.getElementById("share-stat").textContent = (isMinority ? minorityPct : winnerPct) + "%";
+    document.getElementById("share-line").innerHTML = isMinority
+      ? `You're in the minority who picked <b>${winner.name}</b> over ${other.name}.`
+      : `You're right on the fence — the crowd is split down the middle on <b>${winner.name}</b> vs ${other.name}.`;
+
+    const sp = document.getElementById("share-players");
+    sp.innerHTML = "";
+    [winner, other].forEach(p=>{
+      const d = document.createElement("div");
+      d.className="mini";
+      d.style.background = p.grad;
+      d.textContent = p.initials;
+      sp.appendChild(d);
+    });
+
+    setActiveScreen(shareScreen);
+  }
+
+  document.getElementById("btn-again").addEventListener("click", startSession);
+  document.getElementById("btn-share").addEventListener("click", ()=>{
+    alert("Demo mockup — in the real app this exports the card above as an image for IG Stories / TikTok / Shorts.");
+  });
+
+  function startSession(){
+    round = 0;
+    usedPairs = new Set();
+    sessionResults = [];
+    setActiveScreen(playScreen);
+    nextRound();
+  }
+
+  // ---------- Hot Debates screen ----------
+  function renderDebates(){
+    const list = document.getElementById("debates-list");
+    const rows = Object.entries(votes).map(([k, v])=>{
+      const ids = k.split("__");
+      const [id1,id2] = ids;
+      const t = (v[id1]||0)+(v[id2]||0);
+      if(t < 20) return null;
+      const p1pct = Math.round(((v[id1]||0)/t)*100);
+      const p2pct = 100-p1pct;
+      const dist = Math.abs(50-p1pct);
+      return {id1,id2,p1pct,p2pct,t,dist};
+    }).filter(Boolean).sort((x,y)=>x.dist-y.dist).slice(0,8);
+
+    list.innerHTML = "";
+    rows.forEach((r,i)=>{
+      const p1 = byId[r.id1], p2 = byId[r.id2];
+      const hi = r.p1pct>=r.p2pct ? p1 : p2;
+      const hiPct = Math.max(r.p1pct,r.p2pct);
+      const lo = hi===p1 ? p2 : p1;
+      const loPct = 100-hiPct;
+      const row = document.createElement("div");
+      row.className = "debate-row";
+      row.innerHTML = `
+        <div class="debate-rank">${i+1}</div>
+        <div class="debate-mini" style="background:${p1.grad}">${p1.initials}</div>
+        <div class="debate-mid">
+          <div class="debate-names">${p1.name} vs ${p2.name}</div>
+          <div class="debate-split">${hi.name} ${hiPct}% · ${lo.name} ${loPct}% · ${r.t} votes</div>
+        </div>
+        <div class="debate-mini" style="background:${p2.grad}">${p2.initials}</div>
+        <div class="fire">${r.dist<=3?"🔥":""}</div>
+      `;
+      row.addEventListener("click", ()=>{
+        forcedPair = {a:p1, b:p2};
+        setActiveScreen(playScreen);
+        round = Math.max(0, round-1);
+        nextRound();
+      });
+      list.appendChild(row);
+    });
+
+    if(!rows.length){
+      list.innerHTML = `<div style="color:var(--text-dim);font-size:13px;text-align:center;margin-top:40px;">No hot debates yet — play a round first!</div>`;
+    }
+  }
+
+  // ---------- Nav ----------
+  function setActiveScreen(el){
+    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+    el.classList.add("active");
+    document.querySelectorAll(".navbtn").forEach(n=>n.classList.remove("active"));
+    const match = document.querySelector(`.navbtn[data-screen="${el.id}"]`);
+    if(match) match.classList.add("active");
+    else if(el===shareScreen) document.querySelector('.navbtn[data-screen="play-screen"]').classList.add("active");
+  }
+
+  document.querySelectorAll(".navbtn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const target = document.getElementById(btn.dataset.screen);
+      if(btn.dataset.screen === "debates-screen"){
+        renderDebates();
+      }
+      setActiveScreen(target);
+    });
+  });
+
+  // ---------- Category menu (burger) ----------
+  const menuOverlay = document.getElementById("menu-overlay");
+  const catGrid = document.getElementById("cat-grid");
+
+  function renderCatGrid(){
+    catGrid.innerHTML = "";
+    Object.entries(CATEGORIES).forEach(([key, cat])=>{
+      const el = document.createElement("div");
+      el.className = "cat-card" + (key===categoryKey ? " active":"");
+      el.innerHTML = `
+        <div class="cat-icon">${cat.icon}</div>
+        <div class="cat-label">${cat.label}</div>
+        <div class="cat-sub">${cat.players.length} to compare</div>
+      `;
+      el.addEventListener("click", ()=>switchCategory(key));
+      catGrid.appendChild(el);
+    });
+  }
+
+  function switchCategory(key){
+    if(key === categoryKey){ closeMenu(); return; }
+    categoryKey = key;
+    loadCategoryData();
+    votes = loadVotes();
+    seedIfEmpty();
+    forcedPair = null;
+    closeMenu();
+    startSession();
+  }
+
+  function openMenu(){ renderCatGrid(); menuOverlay.classList.add("open"); }
+  function closeMenu(){ menuOverlay.classList.remove("open"); }
+
+  document.getElementById("burger-btn").addEventListener("click", openMenu);
+  document.getElementById("menu-close").addEventListener("click", closeMenu);
+  menuOverlay.addEventListener("click", (e)=>{ if(e.target===menuOverlay) closeMenu(); });
+
+  // ---------- Init ----------
+  loadCategoryData();
+  votes = loadVotes();
+  seedIfEmpty();
+  startSession();
+})();
+</script>
+</body>
+</html>
