@@ -596,31 +596,60 @@
     text-align:center;
     padding:26px;
   }
+  /* --- Share card typography: clean editorial hierarchy ---
+     Big Anton numeral as the hero, a thin rule, then a quiet caption.
+     No text-outline hacks — a soft dark scrim behind the text block
+     provides contrast instead, which reads far cleaner. */
+  .share-textblock{
+    width:100%;
+    padding:20px 18px 16px;
+    border-radius:16px;
+    background:linear-gradient(180deg, rgba(6,10,8,0) 0%, rgba(6,10,8,0.72) 26%, rgba(6,10,8,0.92) 100%);
+  }
   .share-stat{
     font-family:'Anton',sans-serif;
-    font-size:60px;font-weight:400;line-height:1;margin:14px 0 6px;
-    letter-spacing:1px;
-    padding:0 6px;
-    display:inline-block;
-    transform:skewX(-6deg);
-    background:linear-gradient(90deg,var(--gold),var(--amber));
-    -webkit-background-clip:text;background-clip:text;color:transparent;
-    filter:drop-shadow(-1px -1px 0 #000) drop-shadow(1px -1px 0 #000) drop-shadow(-1px 1px 0 #000) drop-shadow(1px 1px 0 #000) drop-shadow(0 4px 14px rgba(0,0,0,0.6));
-  }
-  /* html2canvas can't rasterize background-clip:text gradients — swap to a
-     solid fill while exporting so the stat number doesn't vanish in the PNG */
-  .share-card.exporting .share-stat{
-    background:none;
-    -webkit-text-fill-color:var(--gold);
+    font-size:76px;
+    font-weight:400;
+    line-height:0.92;
+    margin:0;
+    letter-spacing:-1px;
     color:var(--gold);
-    filter:none;
+    text-shadow:0 3px 18px rgba(0,0,0,0.75);
   }
-  .share-line{font-size:15px;font-weight:700;max-width:230px;line-height:1.4;text-shadow:0 2px 8px rgba(0,0,0,0.6);}
-  .share-line b{color:var(--accent2);}
+  .share-card.exporting .share-stat{
+    color:var(--gold);
+    -webkit-text-fill-color:var(--gold);
+  }
+  .share-statlabel{
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.62);
+    margin-top:4px;
+  }
+  .share-rule{
+    width:44px;height:2px;margin:12px auto 12px;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent);
+    opacity:.85;
+  }
+  .share-line{
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:19px;
+    font-weight:600;
+    max-width:250px;
+    line-height:1.28;
+    letter-spacing:.2px;
+    color:rgba(255,255,255,0.94);
+    text-shadow:0 2px 10px rgba(0,0,0,0.8);
+  }
+  .share-line b{font-weight:800;}
   .share-hashtag{
-    margin-top:6px;font-size:13px;font-weight:800;letter-spacing:1.5px;
-    color:var(--gold);text-transform:uppercase;
-    text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000,0 2px 8px rgba(0,0,0,0.8);
+    margin-top:12px;font-size:12px;font-weight:800;letter-spacing:2.5px;
+    color:rgba(255,201,77,0.9);text-transform:uppercase;
+    font-family:'Barlow Condensed',sans-serif;
+    text-shadow:0 2px 8px rgba(0,0,0,0.8);
   }
   .share-instagram-btn{
     margin-top:8px;
@@ -943,9 +972,12 @@
       <div class="share-scrim"></div>
       <div class="share-glass"></div>
       <div class="share-content">
-        <div class="share-stat" id="share-stat">6%</div>
-        <div class="share-line" id="share-line">Your GOAT is <b>Player</b>. <b>1,234 people (50%)</b> agree.</div>
-        <div class="share-hashtag">#PICKYOURGOAT26</div>
+        <div class="share-textblock">
+          <div class="share-stat" id="share-stat">6%</div>
+          <div class="share-statlabel">of players agree</div>
+          <div class="share-rule"></div>
+          <div class="share-line" id="share-line">Your GOAT is <b>Player</b></div>
+          <div class="share-hashtag">#PICKYOURGOAT26</div>
         <a class="share-instagram-btn" href="https://www.instagram.com/werelivinginabundance/" target="_blank" rel="noopener noreferrer">
           <svg class="ig-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2"/>
@@ -954,6 +986,7 @@
           </svg>
           @werelivinginabundance
         </a>
+        </div>
       </div>
     </div>
     <div class="share-social-row">
@@ -1552,7 +1585,9 @@
     document.getElementById("share-stat").textContent = globalPct + "%";
     const winnerNameColor = COUNTRY_AURA[winner.country] ? `rgb(${COUNTRY_AURA[winner.country]})` : "var(--accent2)";
     const otherNameColor = COUNTRY_AURA[other.country] ? `rgb(${COUNTRY_AURA[other.country]})` : "var(--accent2)";
-    document.getElementById("share-line").innerHTML = `Your GOAT is <b style="color:${winnerNameColor}">${winner.name}</b>. <b>${winnerVoteCount.toLocaleString()} people (${globalPct}%)</b> agree.`;
+    document.querySelector(".share-statlabel").textContent =
+      `${winnerVoteCount.toLocaleString()} of ${totalAllVotes.toLocaleString()} players agree`;
+    document.getElementById("share-line").innerHTML = `Your GOAT is <b style="color:${winnerNameColor}">${winner.name}</b>`;
 
     document.getElementById("share-photo-left").style.backgroundImage = `url('images/players/${winner.id}.jpg')`;
     document.getElementById("share-photo-right").style.backgroundImage = `url('images/players/${other.id}.jpg')`;
